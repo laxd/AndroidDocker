@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">AndroidDocker</string>
+    <string name="refresh_containers">Refresh Containers</string>
+</resources>
