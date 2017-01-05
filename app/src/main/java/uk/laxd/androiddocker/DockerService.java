@@ -2,6 +2,8 @@ package uk.laxd.androiddocker;
 
 import java.util.List;
 
+import retrofit2.http.GET;
+import rx.Observable;
 import uk.laxd.androiddocker.dto.DockerContainer;
 import uk.laxd.androiddocker.dto.DockerImage;
 
@@ -11,7 +13,10 @@ import uk.laxd.androiddocker.dto.DockerImage;
 
 public interface DockerService {
 
-    public List<DockerContainer> getContainers();
-    public List<DockerImage> getImages();
+    @GET("/containers/json")
+    Observable<List<DockerContainer>> getContainers();
+
+    @GET("/images/json")
+    Observable<List<DockerImage>> getImages();
 
 }

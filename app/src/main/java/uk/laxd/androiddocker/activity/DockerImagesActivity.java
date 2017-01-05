@@ -7,14 +7,18 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import javax.inject.Inject;
+
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import uk.laxd.androiddocker.AndroidDockerApplication;
+import uk.laxd.androiddocker.DockerService;
 import uk.laxd.androiddocker.R;
-import uk.laxd.androiddocker.adapter.DockerContainerListAdapter;
 import uk.laxd.androiddocker.adapter.DockerImagesListAdapter;
-import uk.laxd.androiddocker.dto.DockerContainer;
 import uk.laxd.androiddocker.dto.DockerImage;
-import uk.laxd.androiddocker.tasks.DockerContainersRequestTask;
-import uk.laxd.androiddocker.tasks.DockerImagesRequestTask;
 
 /**
  * Created by lawrence on 04/01/17.
@@ -22,9 +26,16 @@ import uk.laxd.androiddocker.tasks.DockerImagesRequestTask;
 
 public class DockerImagesActivity extends ListActivity {
 
+    @Inject
+    protected DockerService dockerService;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ((AndroidDockerApplication) getApplication()).getAndroidDockerComponent()
+                .inject(this);
+
         setContentView(R.layout.docker_images);
     }
 
@@ -39,10 +50,28 @@ public class DockerImagesActivity extends ListActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new DockerImagesRequestTask(DockerImagesActivity.this, swipeRefreshLayout, dockerImageAdapter).execute();
+                dockerService.getImages()
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Subscriber<List<DockerImage>>() {
+                            @Override
+                            public void onCompleted() {
+                                swipeRefreshLayout.setRefreshing(false);
+                            }
+
+                            @Override
+                            public void onError(Throwable throwable) {
+
+                            }
+
+                            @Override
+                            public void onNext(List<DockerImage> dockerContainers) {
+                                dockerImageAdapter.clear();
+                                dockerImageAdapter.addAll(dockerContainers);
+                            }
+                        });
             }
         });
 
-        new DockerImagesRequestTask(DockerImagesActivity.this, swipeRefreshLayout, dockerImageAdapter).execute();
     }
 }
