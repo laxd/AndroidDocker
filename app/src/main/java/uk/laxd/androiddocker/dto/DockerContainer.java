@@ -10,7 +10,21 @@ public class DockerContainer extends DockerDto {
     @JsonProperty("Names")
     private String[] names;
 
+    @JsonProperty("State")
+    private String state;
+
+    @JsonProperty("Image")
+    private String image;
+
     public String[] getNames() {
         return names;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public String getImage() {
+        return image;
     }
 }

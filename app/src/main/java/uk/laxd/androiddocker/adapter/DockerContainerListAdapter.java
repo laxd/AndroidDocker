@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -41,9 +42,24 @@ public class DockerContainerListAdapter extends ArrayAdapter<DockerContainer> {
 
         if(dockerContainer != null) {
             TextView nameTextview = (TextView) v.findViewById(R.id.container_name);
+            TextView imageNameTextView = (TextView) v.findViewById(R.id.container_image);
+            ImageView containerStatusView = (ImageView) v.findViewById(R.id.container_status);
 
             if(nameTextview != null) {
                 nameTextview.setText(TextUtils.join(",", dockerContainer.getNames()));
+            }
+
+            if(imageNameTextView != null) {
+                imageNameTextView.setText(dockerContainer.getImage());
+            }
+
+            if(containerStatusView != null) {
+                if("running".equals(dockerContainer.getState())) {
+                    containerStatusView.setImageResource(android.R.drawable.presence_online);
+                }
+                else {
+                    containerStatusView.setImageResource(android.R.drawable.presence_offline);
+                }
             }
         }
 
