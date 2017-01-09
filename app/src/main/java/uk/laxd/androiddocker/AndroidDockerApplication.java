@@ -16,7 +16,9 @@ public class AndroidDockerApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        androidDockerComponent = DaggerAndroidDockerComponent.create();
+        androidDockerComponent = DaggerAndroidDockerComponent.builder()
+                .retrofitModule(new RetrofitModule(this))
+                .build();
     }
 
     public AndroidDockerComponent getAndroidDockerComponent() {

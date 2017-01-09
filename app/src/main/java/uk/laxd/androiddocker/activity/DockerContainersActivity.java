@@ -1,10 +1,17 @@
 package uk.laxd.androiddocker.activity;
 
-import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.widget.ArrayAdapter;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +30,10 @@ import uk.laxd.androiddocker.dto.DockerContainer;
 /**
  * Created by lawrence on 04/01/17.
  */
-public class DockerContainersActivity extends ListActivity {
+public class DockerContainersActivity extends AppCompatActivity {
+
+    private DockerContainerListAdapter dockerContainerAdapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Inject
     protected DockerService dockerService;
@@ -42,10 +52,26 @@ public class DockerContainersActivity extends ListActivity {
     protected void onStart() {
         super.onStart();
 
-        final ArrayAdapter<DockerContainer> dockerContainerAdapter = new DockerContainerListAdapter(this, R.layout.docker_container_list_row, new ArrayList<DockerContainer>());
-        setListAdapter(dockerContainerAdapter);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
+        ListView listView = (ListView) findViewById(R.id.container_list);
+
+        dockerContainerAdapter = new DockerContainerListAdapter(this, R.layout.docker_container_list_row, new ArrayList<DockerContainer>());
+        listView.setAdapter(dockerContainerAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                DockerContainer dockerContainer = (DockerContainer) adapterView.getItemAtPosition(position);
+
+                Intent intent = new Intent(DockerContainersActivity.this, DockerContainerActivity.class);
+                intent.putExtra("id", dockerContainer.getId());
+                startActivity(intent);
+            }
+        });
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -71,6 +97,67 @@ public class DockerContainersActivity extends ListActivity {
                         });
             }
         });
+
+        // TODO: Remove this duplication
+        dockerService.getContainers()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<DockerContainer>>() {
+                    @Override
+                    public void onCompleted() {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<DockerContainer> dockerContainers) {
+                        dockerContainerAdapter.clear();
+                        dockerContainerAdapter.addAll(dockerContainers);
+                    }
+                });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+
+        menuInflater.inflate(R.menu.docker_container_menu, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.refresh:
+                // TODO: Remove this duplication
+                dockerService.getContainers()
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Subscriber<List<DockerContainer>>() {
+                            @Override
+                            public void onCompleted() {
+                                swipeRefreshLayout.setRefreshing(false);
+                            }
+
+                            @Override
+                            public void onError(Throwable throwable) {
+
+                            }
+
+                            @Override
+                            public void onNext(List<DockerContainer> dockerContainers) {
+                                dockerContainerAdapter.clear();
+                                dockerContainerAdapter.addAll(dockerContainers);
+                            }
+                        });
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

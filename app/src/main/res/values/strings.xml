@@ -2,4 +2,8 @@
     <string name="app_name">AndroidDocker</string>
     <string name="show_containers">Show Containers</string>
     <string name="show_images">Show Images</string>
+    <string name="refresh">refresh</string>
+    <string name="setup_guide">Setup Guide</string>
+    <string name="setup_text">Address of your docker serviceR</string>
+    <string name="submit">Submit</string>
 </resources>
