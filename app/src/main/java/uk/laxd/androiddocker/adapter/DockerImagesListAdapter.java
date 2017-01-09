@@ -43,7 +43,7 @@ public class DockerImagesListAdapter extends ArrayAdapter<DockerImage> {
         if(dockerImage != null) {
             TextView nameTextview = (TextView) v.findViewById(R.id.image_name);
 
-            if(nameTextview != null) {
+            if(nameTextview != null && dockerImage.getRepoTags() != null) {
                 nameTextview.setText(TextUtils.join(",", dockerImage.getRepoTags()));
             }
         }
