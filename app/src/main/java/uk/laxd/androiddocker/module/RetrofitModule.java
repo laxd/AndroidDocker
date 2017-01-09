@@ -26,10 +26,14 @@ public class RetrofitModule {
 
     @Provides
     @Singleton
-    Retrofit provideRetrofit() {
+    public Retrofit provideRetrofit() {
         // TODO: Add context? Implement getDockerAddress
         String address = DockerDao.getInstance(context).getDockerAddress();
 
+        return provideRetrofitWithAddress(address);
+    }
+
+    public Retrofit provideRetrofitWithAddress(String address) {
         return new Retrofit.Builder()
                 .baseUrl(address)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
@@ -39,7 +43,7 @@ public class RetrofitModule {
 
     @Provides
     @Singleton
-    DockerService provideDockerService(Retrofit retrofit) {
+    public DockerService provideDockerService(Retrofit retrofit) {
         return retrofit.create(DockerService.class);
     }
 
