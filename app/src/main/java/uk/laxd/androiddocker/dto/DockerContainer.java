@@ -16,8 +16,8 @@ public class DockerContainer extends DockerDto {
     @JsonProperty("Image")
     private String image;
 
-    public String[] getNames() {
-        return names;
+    public String getName() {
+        return names[0].replaceFirst("/", "");
     }
 
     public String getState() {

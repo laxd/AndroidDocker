@@ -46,7 +46,7 @@ public class DockerContainerListAdapter extends ArrayAdapter<DockerContainer> {
             ImageView containerStatusView = (ImageView) v.findViewById(R.id.container_status);
 
             if(nameTextview != null) {
-                nameTextview.setText(TextUtils.join(",", dockerContainer.getNames()));
+                nameTextview.setText(dockerContainer.getName());
             }
 
             if(imageNameTextView != null) {
