@@ -11,6 +11,8 @@ import com.jakewharton.rxbinding.widget.RxTextView;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -18,7 +20,6 @@ import rx.schedulers.Schedulers;
 import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.DockerService;
 import uk.laxd.androiddocker.R;
-import uk.laxd.androiddocker.dto.DockerContainer;
 import uk.laxd.androiddocker.dto.DockerContainerDetail;
 
 /**
@@ -30,6 +31,15 @@ public class DockerContainerActivity extends AppCompatActivity {
     @Inject
     protected DockerService dockerService;
 
+    @BindView(R.id.toolbar)
+    protected Toolbar toolbar;
+
+    @BindView(R.id.container_id)
+    protected TextView id;
+
+    @BindView(R.id.container_name)
+    protected TextView name;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,36 +47,24 @@ public class DockerContainerActivity extends AppCompatActivity {
         ((AndroidDockerApplication) getApplication()).getAndroidDockerComponent().inject(this);
 
         setContentView(R.layout.docker_container);
+
+        ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        final TextView id = (TextView) findViewById(R.id.container_id);
-        final TextView name = (TextView) findViewById(R.id.container_name);
-
         dockerService.getContainer(getIntent().getStringExtra("id"))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<DockerContainerDetail>() {
+                .subscribe(new Action1<DockerContainerDetail>() {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable throwable) {
-
-                    }
-
-                    @Override
-                    public void onNext(DockerContainerDetail dockerContainer) {
-                        id.setText(dockerContainer.getId());
-                        name.setText(dockerContainer.getName());
+                    public void call(DockerContainerDetail dockerContainerDetail) {
+                        id.setText(dockerContainerDetail.getId());
+                        name.setText(dockerContainerDetail.getName());
                     }
                 });
     }

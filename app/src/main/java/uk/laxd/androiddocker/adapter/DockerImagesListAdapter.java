@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.dto.DockerContainer;
 import uk.laxd.androiddocker.dto.DockerImage;
@@ -30,24 +32,35 @@ public class DockerImagesListAdapter extends ArrayAdapter<DockerImage> {
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View v = convertView;
-
-        if(v == null) {
+    public View getView(int position, View view, ViewGroup parent) {
+        ViewHolder viewHolder;
+        if(view == null) {
             LayoutInflater inf = LayoutInflater.from(getContext());
-            v = inf.inflate(R.layout.docker_image_list_row, null);
+            view = inf.inflate(R.layout.docker_image_list_row, null);
+            viewHolder = new ViewHolder(view);
+            view.setTag(viewHolder);
+        }
+        else {
+            viewHolder = (ViewHolder) view.getTag();
         }
 
         DockerImage dockerImage = getItem(position);
 
         if(dockerImage != null) {
-            TextView nameTextview = (TextView) v.findViewById(R.id.image_name);
-
-            if(nameTextview != null && dockerImage.getRepoTags() != null) {
-                nameTextview.setText(TextUtils.join(",", dockerImage.getRepoTags()));
+            if(dockerImage.getRepoTags() != null) {
+                viewHolder.imageName.setText(TextUtils.join(",", dockerImage.getRepoTags()));
             }
         }
 
-        return v;
+        return view;
+    }
+
+    private static class ViewHolder {
+        @BindView(R.id.image_name)
+        TextView imageName;
+
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 }

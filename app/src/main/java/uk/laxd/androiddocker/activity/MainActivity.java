@@ -8,20 +8,35 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
 
-import com.jakewharton.rxbinding.view.RxView;
-
-import rx.functions.Action1;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.dao.DockerDao;
 
 public class MainActivity extends AppCompatActivity {
 
+    @BindView(R.id.toolbar)
+    protected Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+    }
+
+    @OnClick(R.id.show_containers_button)
+    protected void onClickContainersButton() {
+        Intent intent = new Intent(MainActivity.this, DockerContainersActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.show_images_button)
+    protected void onClickImagesButton() {
+        Intent intent = new Intent(MainActivity.this, DockerImagesActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -39,30 +54,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        Button containers = (Button) findViewById(R.id.show_containers_button);
-
-        RxView.clicks(containers)
-                .subscribe(new Action1<Void>() {
-                    @Override
-                    public void call(Void aVoid) {
-                        Intent intent = new Intent(MainActivity.this, DockerContainersActivity.class);
-                        startActivity(intent);
-                    }
-                });
-
-        Button images = (Button) findViewById(R.id.show_images_button);
-
-        RxView.clicks(images)
-                .subscribe(new Action1<Void>() {
-                    @Override
-                    public void call(Void aVoid) {
-                        Intent intent = new Intent(MainActivity.this, DockerImagesActivity.class);
-                        startActivity(intent);
-                    }
-                });
     }
 
     @Override

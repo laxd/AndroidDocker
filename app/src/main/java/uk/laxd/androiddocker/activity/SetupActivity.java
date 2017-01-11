@@ -16,6 +16,9 @@ import com.jakewharton.rxbinding.view.RxView;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -29,89 +32,80 @@ import uk.laxd.androiddocker.module.RetrofitModule;
 /**
  * Created by lawrence on 06/01/17.
  */
-
 public class SetupActivity extends AppCompatActivity {
 
     @Inject
     DockerService dockerService;
+
+    @BindView(R.id.docker_address)
+    protected EditText editText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.setup);
+
+        ButterKnife.bind(this);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+    @OnClick(R.id.submit)
+    public void onSetupSubmit() {
+        final String address = editText.getText().toString();
 
-        final EditText editText = (EditText) findViewById(R.id.docker_address);
+        if (!URLUtil.isValidUrl(address)) {
+            Toast toast = Toast.makeText(SetupActivity.this, "Invalid URL!", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
 
-        Button button = (Button) findViewById(R.id.submit);
+        final ProgressDialog progressDialog = new ProgressDialog(SetupActivity.this);
+        progressDialog.setMessage("Checking docker address...");
+        progressDialog.setIndeterminate(true);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
 
-        RxView.clicks(button)
-                .subscribe(new Action1<Void>() {
+
+        // TODO: Find a way to inject this...
+        RetrofitModule retrofitModule = new RetrofitModule(SetupActivity.this);
+        final DockerService dockerService = retrofitModule.provideDockerService(retrofitModule.provideRetrofitWithAddress(address));
+
+        dockerService.getVersion()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<DockerVersion>() {
                     @Override
-                    public void call(Void aVoid) {
-                        final String address = editText.getText().toString();
+                    public void onCompleted() {
 
-                        if (!URLUtil.isValidUrl(address)) {
-                            Toast toast = Toast.makeText(SetupActivity.this, "Invalid URL!", Toast.LENGTH_SHORT);
-                            toast.show();
-                            return;
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        Log.w(SetupActivity.class.toString(), "Encountered error while trying to contact docker service", throwable);
+                        progressDialog.cancel();
+
+                        Toast toast = Toast.makeText(SetupActivity.this, "Could not contact docker service", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+
+                    @Override
+                    public void onNext(DockerVersion dockerVersion) {
+                        if(TextUtils.isEmpty(dockerVersion.getVersion())) {
+                            progressDialog.cancel();
                         }
+                        else {
 
-                        final ProgressDialog progressDialog = new ProgressDialog(SetupActivity.this);
-                        progressDialog.setMessage("Checking docker address...");
-                        progressDialog.setIndeterminate(true);
-                        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                        progressDialog.show();
+                            Log.d(SetupActivity.class.toString(), "Setting up docker address as " + address);
 
+                            DockerDao dockerDao = DockerDao.getInstance(getApplicationContext());
 
-                        // TODO: Find a way to inject this...
-                        RetrofitModule retrofitModule = new RetrofitModule(SetupActivity.this);
-                        final DockerService dockerService = retrofitModule.provideDockerService(retrofitModule.provideRetrofitWithAddress(address));
+                            dockerDao.setDockerAddress(address);
 
-                        dockerService.getVersion()
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new Subscriber<DockerVersion>() {
-                                    @Override
-                                    public void onCompleted() {
+                            progressDialog.dismiss();
 
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable throwable) {
-                                        Log.w(SetupActivity.class.toString(), "Encountered error while trying to contact docker service", throwable);
-                                        progressDialog.cancel();
-
-                                        Toast toast = Toast.makeText(SetupActivity.this, "Could not contact docker service", Toast.LENGTH_SHORT);
-                                        toast.show();
-                                    }
-
-                                    @Override
-                                    public void onNext(DockerVersion dockerVersion) {
-                                        if(TextUtils.isEmpty(dockerVersion.getVersion())) {
-                                            progressDialog.cancel();
-                                        }
-                                        else {
-
-                                            Log.d(SetupActivity.class.toString(), "Setting up docker address as " + address);
-
-                                            DockerDao dockerDao = DockerDao.getInstance(getApplicationContext());
-
-                                            dockerDao.setDockerAddress(address);
-
-                                            progressDialog.dismiss();
-
-                                            Intent intent = new Intent(SetupActivity.this, MainActivity.class);
-                                            startActivity(intent);
-                                        }
-                                    }
-                                });
-
+                            Intent intent = new Intent(SetupActivity.this, MainActivity.class);
+                            startActivity(intent);
+                        }
                     }
                 });
     }

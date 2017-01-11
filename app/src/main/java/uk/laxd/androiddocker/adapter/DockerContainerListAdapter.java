@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.dto.DockerContainer;
 
@@ -30,39 +32,49 @@ public class DockerContainerListAdapter extends ArrayAdapter<DockerContainer> {
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View v = convertView;
+    public View getView(int position, View view, ViewGroup parent) {
 
-        if(v == null) {
+        ViewHolder holder;
+
+        if(view == null) {
             LayoutInflater inf = LayoutInflater.from(getContext());
-            v = inf.inflate(R.layout.docker_container_list_row, null);
+            view = inf.inflate(R.layout.docker_container_list_row, null);
+            holder = new ViewHolder(view);
+            view.setTag(holder);
+        }
+        else {
+            holder = (ViewHolder) view.getTag();
         }
 
         DockerContainer dockerContainer = getItem(position);
 
         if(dockerContainer != null) {
-            TextView nameTextview = (TextView) v.findViewById(R.id.container_name);
-            TextView imageNameTextView = (TextView) v.findViewById(R.id.container_image);
-            ImageView containerStatusView = (ImageView) v.findViewById(R.id.container_status);
+            holder.nameTextView.setText(dockerContainer.getName());
+            holder.imageNameTextView.setText(dockerContainer.getImage());
 
-            if(nameTextview != null) {
-                nameTextview.setText(dockerContainer.getName());
+            if("running".equals(dockerContainer.getState())) {
+                holder.containerStatusView.setImageResource(android.R.drawable.presence_online);
             }
-
-            if(imageNameTextView != null) {
-                imageNameTextView.setText(dockerContainer.getImage());
-            }
-
-            if(containerStatusView != null) {
-                if("running".equals(dockerContainer.getState())) {
-                    containerStatusView.setImageResource(android.R.drawable.presence_online);
-                }
-                else {
-                    containerStatusView.setImageResource(android.R.drawable.presence_offline);
-                }
+            else {
+                holder.containerStatusView.setImageResource(android.R.drawable.presence_offline);
             }
         }
 
-        return v;
+        return view;
+    }
+
+    private static class ViewHolder {
+        @BindView(R.id.container_name)
+        TextView nameTextView;
+
+        @BindView(R.id.container_image)
+        TextView imageNameTextView;
+
+        @BindView(R.id.container_status)
+        ImageView containerStatusView;
+
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 }
