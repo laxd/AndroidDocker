@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,11 +25,16 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
 
+    @BindView(R.id.navList)
+    protected ListView navList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         unbinder = ButterKnife.bind(this);
+
+        navList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new String[]{"Item1", "Item2"}));
     }
 
     @Override

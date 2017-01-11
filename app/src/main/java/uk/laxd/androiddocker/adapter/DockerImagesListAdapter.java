@@ -54,7 +54,7 @@ public class DockerImagesListAdapter extends ArrayAdapter<DockerImage> {
         return view;
     }
 
-    private static class ViewHolder {
+    static class ViewHolder {
         @BindView(R.id.image_name)
         TextView imageName;
 

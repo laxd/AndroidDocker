@@ -62,7 +62,7 @@ public class DockerContainerListAdapter extends ArrayAdapter<DockerContainer> {
         return view;
     }
 
-    private static class ViewHolder {
+    static class ViewHolder {
         @BindView(R.id.container_name)
         TextView nameTextView;
 
