@@ -12,10 +12,13 @@ import android.view.MenuItem;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.dao.DockerDao;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Unbinder unbinder;
 
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
@@ -24,7 +27,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
     }
 
     @OnClick(R.id.show_containers_button)

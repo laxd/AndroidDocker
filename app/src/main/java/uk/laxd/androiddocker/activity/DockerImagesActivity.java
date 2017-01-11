@@ -1,6 +1,5 @@
 package uk.laxd.androiddocker.activity;
 
-import android.app.ListActivity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,6 +15,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -30,6 +30,8 @@ import uk.laxd.androiddocker.dto.DockerImage;
  */
 
 public class DockerImagesActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+
+    private Unbinder unbinder;
 
     @Inject
     protected DockerService dockerService;
@@ -55,9 +57,15 @@ public class DockerImagesActivity extends AppCompatActivity implements SwipeRefr
 
         setContentView(R.layout.docker_images);
 
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
     }
 
     @Override

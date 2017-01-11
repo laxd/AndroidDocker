@@ -8,17 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.URLUtil;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.jakewharton.rxbinding.view.RxView;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -34,6 +32,8 @@ import uk.laxd.androiddocker.module.RetrofitModule;
  */
 public class SetupActivity extends AppCompatActivity {
 
+    private Unbinder unbinder;
+
     @Inject
     DockerService dockerService;
 
@@ -46,7 +46,13 @@ public class SetupActivity extends AppCompatActivity {
 
         setContentView(R.layout.setup);
 
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
     }
 
     @OnClick(R.id.submit)

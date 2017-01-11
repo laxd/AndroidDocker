@@ -14,7 +14,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import uk.laxd.androiddocker.R;
-import uk.laxd.androiddocker.dto.DockerContainer;
 import uk.laxd.androiddocker.dto.DockerImage;
 
 /**

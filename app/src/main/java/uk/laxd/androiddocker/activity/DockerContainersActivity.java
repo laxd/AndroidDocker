@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
+import butterknife.Unbinder;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -33,6 +34,7 @@ import uk.laxd.androiddocker.dto.DockerContainer;
  */
 public class DockerContainersActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
+    private Unbinder unbinder;
 
     private DockerContainerListAdapter dockerContainerAdapter;
 
@@ -58,9 +60,15 @@ public class DockerContainersActivity extends AppCompatActivity implements Swipe
 
         setContentView(R.layout.docker_containers);
 
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
     }
 
     @Override
