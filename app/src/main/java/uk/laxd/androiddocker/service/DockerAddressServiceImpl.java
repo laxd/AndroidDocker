@@ -1,52 +1,47 @@
 package uk.laxd.androiddocker.service;
 
-import android.content.Context;
-
-import java.util.Observable;
+import javax.inject.Inject;
 
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import uk.laxd.androiddocker.DockerService;
+import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.dao.DockerDao;
+import uk.laxd.androiddocker.domain.DockerServer;
 
 /**
  * Created by lawrence on 06/01/17.
  */
 public class DockerAddressServiceImpl implements DockerAddressService {
 
-    private DockerDao dockerDao;
+    @Inject
+    protected DockerDao dockerDao;
 
-    public DockerAddressServiceImpl(Context context) {
-        dockerDao = DockerDao.getInstance(context);
-    }
+    @Inject
+    protected DockerServiceFactory dockerServiceFactory;
 
     @Override
     public boolean isSetup() {
-        return dockerDao.isSetup();
+        return dockerDao.requiresSetup();
     }
 
     @Override
     public boolean setupIfValid(String address) {
+        boolean wasSetup = false;
+
         if(isValid(address)) {
             setup(address);
-
-            return true;
+            wasSetup = true;
         }
 
-        return false;
+        return wasSetup;
     }
 
     @Override
     public boolean isValid(String address) {
-        DockerService dockerService = new Retrofit.Builder()
-                .baseUrl(address)
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(JacksonConverterFactory.create())
-                .build()
-                .create(DockerService.class);
-
-        return (dockerService.getVersion() != null);
+        return (dockerServiceFactory.createWithAddress(address)
+                .getVersion() != null);
     }
 
     @Override

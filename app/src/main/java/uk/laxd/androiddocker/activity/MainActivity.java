@@ -11,16 +11,22 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.dao.DockerDao;
 
 public class MainActivity extends AppCompatActivity {
 
     private Unbinder unbinder;
+
+    @Inject
+    protected DockerDao dockerDao;
 
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
@@ -31,6 +37,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ((AndroidDockerApplication) getApplication())
+                .getAndroidDockerComponent()
+                .inject(this);
+
         setContentView(R.layout.activity_main);
         unbinder = ButterKnife.bind(this);
 
@@ -59,9 +70,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        DockerDao dockerDao = DockerDao.getInstance(getApplicationContext());
-
-        if(!dockerDao.isSetup()) {
+        if(dockerDao.requiresSetup()) {
             Log.i(MainActivity.class.toString(), "Docker address not setup yet, redirecting to SetupActivity");
 
             Intent intent = new Intent(this, SetupActivity.class);

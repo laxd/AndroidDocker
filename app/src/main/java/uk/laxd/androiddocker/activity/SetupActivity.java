@@ -19,9 +19,10 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.DockerService;
+import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.dao.DockerDao;
 import uk.laxd.androiddocker.dto.DockerVersion;
@@ -35,7 +36,10 @@ public class SetupActivity extends AppCompatActivity {
     private Unbinder unbinder;
 
     @Inject
-    DockerService dockerService;
+    protected DockerDao dockerDao;
+
+    @Inject
+    protected DockerServiceFactory dockerServiceFactory;
 
     @BindView(R.id.docker_address)
     protected EditText editText;
@@ -43,6 +47,10 @@ public class SetupActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ((AndroidDockerApplication) getApplication())
+                .getAndroidDockerComponent()
+                .inject(this);
 
         setContentView(R.layout.setup);
 
@@ -71,12 +79,9 @@ public class SetupActivity extends AppCompatActivity {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.show();
 
-
-        // TODO: Find a way to inject this...
-        RetrofitModule retrofitModule = new RetrofitModule(SetupActivity.this);
-        final DockerService dockerService = retrofitModule.provideDockerService(retrofitModule.provideRetrofitWithAddress(address));
-
-        dockerService.getVersion()
+        dockerServiceFactory
+                .createWithAddress(address)
+                .getVersion()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<DockerVersion>() {
@@ -100,13 +105,10 @@ public class SetupActivity extends AppCompatActivity {
                             progressDialog.cancel();
                         }
                         else {
-
                             Log.d(SetupActivity.class.toString(), "Setting up docker address as " + address);
 
-                            DockerDao dockerDao = DockerDao.getInstance(getApplicationContext());
-
                             dockerDao.setDockerAddress(address);
-
+                            dockerServiceFactory.updateDockerAddress(address);
                             progressDialog.dismiss();
 
                             Intent intent = new Intent(SetupActivity.this, MainActivity.class);

@@ -4,6 +4,7 @@ import java.util.List;
 
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Url;
 import rx.Observable;
 import uk.laxd.androiddocker.dto.DockerContainer;
 import uk.laxd.androiddocker.dto.DockerContainerDetail;

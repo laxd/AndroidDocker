@@ -21,6 +21,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.DockerService;
+import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.adapter.DockerImagesListAdapter;
 import uk.laxd.androiddocker.dto.DockerImage;
@@ -34,7 +35,9 @@ public class DockerImagesActivity extends AppCompatActivity implements SwipeRefr
     private Unbinder unbinder;
 
     @Inject
-    protected DockerService dockerService;
+    protected DockerServiceFactory dockerServiceFactory;
+
+    private DockerService dockerService;
 
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
@@ -60,6 +63,8 @@ public class DockerImagesActivity extends AppCompatActivity implements SwipeRefr
         unbinder = ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
+
+        dockerService = dockerServiceFactory.getDockerService();
     }
 
     @Override

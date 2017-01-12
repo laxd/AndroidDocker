@@ -16,6 +16,7 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.DockerService;
+import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.dto.DockerContainerDetail;
 
@@ -28,7 +29,7 @@ public class DockerContainerActivity extends AppCompatActivity {
     private Unbinder unbinder;
 
     @Inject
-    protected DockerService dockerService;
+    protected DockerServiceFactory dockerServiceFactory;
 
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
@@ -63,7 +64,8 @@ public class DockerContainerActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        dockerService.getContainer(getIntent().getStringExtra("id"))
+        dockerServiceFactory.getDockerService()
+                .getContainer(getIntent().getStringExtra("id"))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<DockerContainerDetail>() {

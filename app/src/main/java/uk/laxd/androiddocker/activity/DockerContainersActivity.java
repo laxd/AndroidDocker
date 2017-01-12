@@ -22,9 +22,11 @@ import butterknife.OnItemClick;
 import butterknife.Unbinder;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.DockerService;
+import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.adapter.DockerContainerListAdapter;
 import uk.laxd.androiddocker.dto.DockerContainer;
@@ -48,7 +50,7 @@ public class DockerContainersActivity extends AppCompatActivity implements Swipe
     protected Toolbar toolbar;
 
     @Inject
-    protected DockerService dockerService;
+    protected DockerServiceFactory dockerServiceFactory;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,7 +77,6 @@ public class DockerContainersActivity extends AppCompatActivity implements Swipe
     protected void onStart() {
         super.onStart();
 
-
         dockerContainerAdapter = new DockerContainerListAdapter(this, R.layout.docker_container_list_row, new ArrayList<DockerContainer>());
         listView.setAdapter(dockerContainerAdapter);
 
@@ -96,24 +97,17 @@ public class DockerContainersActivity extends AppCompatActivity implements Swipe
 
     @Override
     public void onRefresh() {
-        dockerService.getContainers()
+        dockerServiceFactory.getDockerService()
+                .getContainers()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<DockerContainer>>() {
+                .subscribe(new Action1<List<DockerContainer>>() {
                     @Override
-                    public void onCompleted() {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-
-                    @Override
-                    public void onError(Throwable throwable) {
-
-                    }
-
-                    @Override
-                    public void onNext(List<DockerContainer> dockerContainers) {
+                    public void call(List<DockerContainer> dockerContainers) {
                         dockerContainerAdapter.clear();
                         dockerContainerAdapter.addAll(dockerContainers);
+
+                        swipeRefreshLayout.setRefreshing(false);
                     }
                 });
     }
@@ -132,22 +126,13 @@ public class DockerContainersActivity extends AppCompatActivity implements Swipe
         switch (item.getItemId()) {
             case R.id.refresh:
                 // TODO: Remove this duplication
-                dockerService.getContainers()
+                dockerServiceFactory.getDockerService()
+                        .getContainers()
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Subscriber<List<DockerContainer>>() {
+                        .subscribe(new Action1<List<DockerContainer>>() {
                             @Override
-                            public void onCompleted() {
-                                swipeRefreshLayout.setRefreshing(false);
-                            }
-
-                            @Override
-                            public void onError(Throwable throwable) {
-
-                            }
-
-                            @Override
-                            public void onNext(List<DockerContainer> dockerContainers) {
+                            public void call(List<DockerContainer> dockerContainers) {
                                 dockerContainerAdapter.clear();
                                 dockerContainerAdapter.addAll(dockerContainers);
                             }
