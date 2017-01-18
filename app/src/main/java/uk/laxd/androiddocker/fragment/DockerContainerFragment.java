@@ -1,8 +1,11 @@
-package uk.laxd.androiddocker.activity;
+package uk.laxd.androiddocker.fragment;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 
@@ -15,7 +18,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import uk.laxd.androiddocker.AndroidDockerApplication;
-import uk.laxd.androiddocker.DockerService;
 import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.dto.DockerContainerDetail;
@@ -24,15 +26,12 @@ import uk.laxd.androiddocker.dto.DockerContainerDetail;
  * Created by lawrence on 05/01/17.
  */
 
-public class DockerContainerActivity extends AppCompatActivity {
+public class DockerContainerFragment extends Fragment {
 
     private Unbinder unbinder;
 
     @Inject
     protected DockerServiceFactory dockerServiceFactory;
-
-    @BindView(R.id.toolbar)
-    protected Toolbar toolbar;
 
     @BindView(R.id.container_id)
     protected TextView id;
@@ -40,32 +39,32 @@ public class DockerContainerActivity extends AppCompatActivity {
     @BindView(R.id.container_name)
     protected TextView name;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.docker_container, container, false);
+        unbinder = ButterKnife.bind(this, root);
 
-        ((AndroidDockerApplication) getApplication()).getAndroidDockerComponent().inject(this);
+        ((AndroidDockerApplication) getActivity().getApplication())
+                .getAndroidDockerComponent().inject(this);
 
-        setContentView(R.layout.docker_container);
-
-        unbinder = ButterKnife.bind(this);
-
-        setSupportActionBar(toolbar);
+        return root;
     }
 
+
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
 
         unbinder.unbind();
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
 
         dockerServiceFactory.getDockerService()
-                .getContainer(getIntent().getStringExtra("id"))
+                .getContainer(getArguments().getString("id"))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<DockerContainerDetail>() {

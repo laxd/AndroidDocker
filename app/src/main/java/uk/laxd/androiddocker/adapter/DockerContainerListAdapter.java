@@ -2,10 +2,8 @@ package uk.laxd.androiddocker.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,11 +18,7 @@ import uk.laxd.androiddocker.dto.DockerContainer;
  * Created by lawrence on 04/01/17.
  */
 
-public class DockerContainerListAdapter extends ArrayAdapter<DockerContainer> {
-    public DockerContainerListAdapter(Context context, int resource) {
-        super(context, resource);
-    }
-
+public class DockerContainerListAdapter extends ViewHolderArrayAdapter<DockerContainer, DockerContainerListAdapter.ViewHolder> {
     public DockerContainerListAdapter(Context context, int resource, List<DockerContainer> objects) {
         super(context, resource, objects);
     }
@@ -32,37 +26,25 @@ public class DockerContainerListAdapter extends ArrayAdapter<DockerContainer> {
     @NonNull
     @Override
     public View getView(int position, View view, ViewGroup parent) {
-
-        ViewHolder holder;
-
-        if(view == null) {
-            LayoutInflater inf = LayoutInflater.from(getContext());
-            view = inf.inflate(R.layout.docker_container_list_row, null);
-            holder = new ViewHolder(view);
-            view.setTag(holder);
-        }
-        else {
-            holder = (ViewHolder) view.getTag();
-        }
+        ViewHolder holder = createOrRestoreViewHolder(view, R.layout.docker_container_list_row);
 
         DockerContainer dockerContainer = getItem(position);
 
         if(dockerContainer != null) {
             holder.nameTextView.setText(dockerContainer.getName());
             holder.imageNameTextView.setText(dockerContainer.getImage());
-
-            if("running".equals(dockerContainer.getState())) {
-                holder.containerStatusView.setImageResource(android.R.drawable.presence_online);
-            }
-            else {
-                holder.containerStatusView.setImageResource(android.R.drawable.presence_offline);
-            }
+            holder.containerStatusView.setImageResource(dockerContainer.getState().getImageResource());
         }
 
-        return view;
+        return holder.getBaseView();
     }
 
-    static class ViewHolder {
+    @Override
+    public ViewHolder createNewHolder(View view) {
+        return new ViewHolder(view);
+    }
+
+    public class ViewHolder extends AbstractViewHolder {
         @BindView(R.id.container_name)
         TextView nameTextView;
 
@@ -73,6 +55,7 @@ public class DockerContainerListAdapter extends ArrayAdapter<DockerContainer> {
         ImageView containerStatusView;
 
         public ViewHolder(View view) {
+            super(view);
             ButterKnife.bind(this, view);
         }
     }

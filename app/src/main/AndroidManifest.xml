@@ -18,13 +18,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.SetupActivity">
+        <activity android:name=".fragment.SetupFragment">
         </activity>
-        <activity android:name=".activity.DockerContainersActivity">
+        <activity android:name=".fragment.DockerContainersFragment">
         </activity>
-        <activity android:name=".activity.DockerImagesActivity">
+        <activity android:name=".fragment.DockerImagesFragment">
         </activity>
-        <activity android:name=".activity.DockerContainerActivity">
+        <activity android:name=".fragment.DockerContainerFragment">
         </activity>
 
         <meta-data android:name="DATABASE" android:value="Docker.db" />

@@ -20,11 +20,39 @@ public class DockerContainer extends DockerDto {
         return names[0].replaceFirst("/", "");
     }
 
-    public String getState() {
-        return state;
+    public ContainerState getState() {
+        return ContainerState.getState(state);
     }
 
     public String getImage() {
         return image;
+    }
+
+    public enum ContainerState {
+        RUNNING("running", android.R.drawable.presence_online),
+        STOPPED("stopped", android.R.drawable.presence_offline);
+
+        private String stateName;
+        private int imageResource;
+
+        ContainerState(String stateName, int imageResource) {
+            this.stateName = stateName;
+            this.imageResource = imageResource;
+        }
+
+        public static ContainerState getState(String state) {
+            for(ContainerState containerState : values()) {
+                if(containerState.stateName.equals(state)) {
+                    return containerState;
+                }
+            }
+
+            // Assume stopped
+            return STOPPED;
+        }
+
+        public int getImageResource() {
+            return imageResource;
+        }
     }
 }

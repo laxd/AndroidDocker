@@ -1,12 +1,17 @@
-package uk.laxd.androiddocker.activity;
+package uk.laxd.androiddocker.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -21,17 +26,15 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import uk.laxd.androiddocker.AndroidDockerApplication;
-import uk.laxd.androiddocker.DockerService;
 import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.dao.DockerDao;
 import uk.laxd.androiddocker.dto.DockerVersion;
-import uk.laxd.androiddocker.module.RetrofitModule;
 
 /**
  * Created by lawrence on 06/01/17.
  */
-public class SetupActivity extends AppCompatActivity {
+public class SetupFragment extends Fragment {
 
     private Unbinder unbinder;
 
@@ -45,20 +48,26 @@ public class SetupActivity extends AppCompatActivity {
     protected EditText editText;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((AndroidDockerApplication) getApplication())
+        ((AndroidDockerApplication) getActivity().getApplication())
                 .getAndroidDockerComponent()
                 .inject(this);
+    }
 
-        setContentView(R.layout.setup);
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.setup, null);
 
-        unbinder = ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this, view);
+
+        return view;
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
     }
@@ -68,12 +77,12 @@ public class SetupActivity extends AppCompatActivity {
         final String address = editText.getText().toString();
 
         if (!URLUtil.isValidUrl(address)) {
-            Toast toast = Toast.makeText(SetupActivity.this, "Invalid URL!", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(getActivity(), "Invalid URL!", Toast.LENGTH_SHORT);
             toast.show();
             return;
         }
 
-        final ProgressDialog progressDialog = new ProgressDialog(SetupActivity.this);
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Checking docker address...");
         progressDialog.setIndeterminate(true);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -92,10 +101,10 @@ public class SetupActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable throwable) {
-                        Log.w(SetupActivity.class.toString(), "Encountered error while trying to contact docker service", throwable);
+                        Log.w(SetupFragment.class.toString(), "Encountered error while trying to contact docker service", throwable);
                         progressDialog.cancel();
 
-                        Toast toast = Toast.makeText(SetupActivity.this, "Could not contact docker service", Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(getActivity(), "Could not contact docker service", Toast.LENGTH_SHORT);
                         toast.show();
                     }
 
@@ -105,14 +114,16 @@ public class SetupActivity extends AppCompatActivity {
                             progressDialog.cancel();
                         }
                         else {
-                            Log.d(SetupActivity.class.toString(), "Setting up docker address as " + address);
+                            Log.d(SetupFragment.class.toString(), "Setting up docker address as " + address);
 
                             dockerDao.setDockerAddress(address);
                             dockerServiceFactory.updateDockerAddress(address);
                             progressDialog.dismiss();
 
-                            Intent intent = new Intent(SetupActivity.this, MainActivity.class);
-                            startActivity(intent);
+
+                            FragmentTransaction tx = getFragmentManager().beginTransaction();
+                            tx.replace(R.id.content_frame, Fragment.instantiate(getActivity(), "DockerContainersFragment", null));
+                            tx.commit();
                         }
                     }
                 });

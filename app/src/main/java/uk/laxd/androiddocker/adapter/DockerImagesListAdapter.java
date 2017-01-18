@@ -3,10 +3,8 @@ package uk.laxd.androiddocker.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.List;
@@ -20,7 +18,7 @@ import uk.laxd.androiddocker.dto.DockerImage;
  * Created by lawrence on 04/01/17.
  */
 
-public class DockerImagesListAdapter extends ArrayAdapter<DockerImage> {
+public class DockerImagesListAdapter extends ViewHolderArrayAdapter<DockerImage, DockerImagesListAdapter.ViewHolder> {
     public DockerImagesListAdapter(Context context, int resource) {
         super(context, resource);
     }
@@ -32,16 +30,7 @@ public class DockerImagesListAdapter extends ArrayAdapter<DockerImage> {
     @NonNull
     @Override
     public View getView(int position, View view, ViewGroup parent) {
-        ViewHolder viewHolder;
-        if(view == null) {
-            LayoutInflater inf = LayoutInflater.from(getContext());
-            view = inf.inflate(R.layout.docker_image_list_row, null);
-            viewHolder = new ViewHolder(view);
-            view.setTag(viewHolder);
-        }
-        else {
-            viewHolder = (ViewHolder) view.getTag();
-        }
+        ViewHolder viewHolder = createOrRestoreViewHolder(view, R.layout.docker_image_list_row);
 
         DockerImage dockerImage = getItem(position);
 
@@ -51,14 +40,20 @@ public class DockerImagesListAdapter extends ArrayAdapter<DockerImage> {
             }
         }
 
-        return view;
+        return viewHolder.getBaseView();
     }
 
-    static class ViewHolder {
+    @Override
+    public ViewHolder createNewHolder(View view) {
+        return new ViewHolder(view);
+    }
+
+    public class ViewHolder extends AbstractViewHolder {
         @BindView(R.id.image_name)
         TextView imageName;
 
         public ViewHolder(View view) {
+            super(view);
             ButterKnife.bind(this, view);
         }
     }

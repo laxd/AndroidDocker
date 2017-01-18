@@ -1,10 +1,12 @@
-package uk.laxd.androiddocker.activity;
+package uk.laxd.androiddocker.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -16,13 +18,13 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.DockerService;
 import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.R;
+import uk.laxd.androiddocker.action.ToastOnErrorSubscription;
 import uk.laxd.androiddocker.adapter.DockerImagesListAdapter;
 import uk.laxd.androiddocker.dto.DockerImage;
 
@@ -30,7 +32,7 @@ import uk.laxd.androiddocker.dto.DockerImage;
  * Created by lawrence on 04/01/17.
  */
 
-public class DockerImagesActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class DockerImagesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private Unbinder unbinder;
 
@@ -38,9 +40,6 @@ public class DockerImagesActivity extends AppCompatActivity implements SwipeRefr
     protected DockerServiceFactory dockerServiceFactory;
 
     private DockerService dockerService;
-
-    @BindView(R.id.toolbar)
-    protected Toolbar toolbar;
 
     @BindView(R.id.image_list)
     protected ListView listView;
@@ -51,37 +50,40 @@ public class DockerImagesActivity extends AppCompatActivity implements SwipeRefr
     private ArrayAdapter<DockerImage> dockerImageAdapter;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((AndroidDockerApplication) getApplication())
+        ((AndroidDockerApplication) getActivity().getApplication())
                 .getAndroidDockerComponent()
                 .inject(this);
-
-        setContentView(R.layout.docker_images);
-
-        unbinder = ButterKnife.bind(this);
-
-        setSupportActionBar(toolbar);
 
         dockerService = dockerServiceFactory.getDockerService();
     }
 
+    @Nullable
     @Override
-    protected void onDestroy() {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.docker_images, null);
+
+        unbinder = ButterKnife.bind(this, view);
+
+        return view;
+    }
+
+    @Override
+    public void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
 
-        dockerImageAdapter = new DockerImagesListAdapter(this, R.layout.docker_image_list_row, new ArrayList<DockerImage>());
+        dockerImageAdapter = new DockerImagesListAdapter(getActivity(), R.layout.docker_image_list_row, new ArrayList<DockerImage>());
         listView.setAdapter(dockerImageAdapter);
 
         swipeRefreshLayout.setOnRefreshListener(this);
-
 
         onRefresh();
     }
@@ -91,22 +93,18 @@ public class DockerImagesActivity extends AppCompatActivity implements SwipeRefr
         dockerService.getImages()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<DockerImage>>() {
+                .subscribe(new ToastOnErrorSubscription<List<DockerImage>>(getActivity())
+                {
                     @Override
                     public void onCompleted() {
                         swipeRefreshLayout.setRefreshing(false);
                     }
 
                     @Override
-                    public void onError(Throwable throwable) {
-
-                    }
-
-                    @Override
-                    public void onNext(List<DockerImage> dockerContainers) {
+                    public void onNext(List<DockerImage> dockerImages) {
                         dockerImageAdapter.clear();
-                        dockerImageAdapter.addAll(dockerContainers);
+                        dockerImageAdapter.addAll(dockerImages);
                     }
-                });
+                }.withRefreshLayout(swipeRefreshLayout));
     }
 }

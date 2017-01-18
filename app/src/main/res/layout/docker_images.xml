@@ -4,13 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar">
-
-    </include>
-
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh_layout"
         android:orientation="vertical"
