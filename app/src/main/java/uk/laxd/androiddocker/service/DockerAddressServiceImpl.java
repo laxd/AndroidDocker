@@ -2,13 +2,8 @@ package uk.laxd.androiddocker.service;
 
 import javax.inject.Inject;
 
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.jackson.JacksonConverterFactory;
-import uk.laxd.androiddocker.DockerService;
 import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.dao.DockerDao;
-import uk.laxd.androiddocker.domain.DockerServer;
 
 /**
  * Created by lawrence on 06/01/17.
@@ -23,7 +18,7 @@ public class DockerAddressServiceImpl implements DockerAddressService {
 
     @Override
     public boolean isSetup() {
-        return dockerDao.requiresSetup();
+        return !dockerDao.requiresSetup();
     }
 
     @Override
@@ -40,8 +35,13 @@ public class DockerAddressServiceImpl implements DockerAddressService {
 
     @Override
     public boolean isValid(String address) {
-        return (dockerServiceFactory.createWithAddress(address)
-                .getVersion() != null);
+        try {
+            return (dockerServiceFactory.createWithAddress(address)
+                    .getVersion() != null);
+        } catch (IllegalArgumentException e) {
+            // Not a valid URL
+            return false;
+        }
     }
 
     @Override
