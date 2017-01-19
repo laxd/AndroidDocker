@@ -33,7 +33,8 @@ public class DockerContainerListAdapter extends ViewHolderArrayAdapter<DockerCon
         if(dockerContainer != null) {
             holder.nameTextView.setText(dockerContainer.getName());
             holder.imageNameTextView.setText(dockerContainer.getImage());
-            holder.containerStatusView.setImageResource(dockerContainer.getState().getImageResource());
+            holder.containerStatusView.setBackgroundResource(dockerContainer.getState().getImageResource());
+            holder.containerStatusView.setText(dockerContainer.getState().name().toUpperCase());
         }
 
         return holder.getBaseView();
@@ -52,7 +53,7 @@ public class DockerContainerListAdapter extends ViewHolderArrayAdapter<DockerCon
         TextView imageNameTextView;
 
         @BindView(R.id.container_status)
-        ImageView containerStatusView;
+        TextView containerStatusView;
 
         public ViewHolder(View view) {
             super(view);

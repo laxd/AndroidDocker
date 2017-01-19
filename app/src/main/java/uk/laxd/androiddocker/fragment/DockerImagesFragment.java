@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,15 +19,16 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.DockerService;
 import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.R;
-import uk.laxd.androiddocker.action.ToastOnErrorSubscription;
 import uk.laxd.androiddocker.adapter.DockerImagesListAdapter;
 import uk.laxd.androiddocker.dto.DockerImage;
+import uk.laxd.androiddocker.rx.AdapterSubscriber;
 
 /**
  * Created by lawrence on 04/01/17.
@@ -93,18 +95,6 @@ public class DockerImagesFragment extends Fragment implements SwipeRefreshLayout
         dockerService.getImages()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new ToastOnErrorSubscription<List<DockerImage>>(getActivity())
-                {
-                    @Override
-                    public void onCompleted() {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-
-                    @Override
-                    public void onNext(List<DockerImage> dockerImages) {
-                        dockerImageAdapter.clear();
-                        dockerImageAdapter.addAll(dockerImages);
-                    }
-                }.withRefreshLayout(swipeRefreshLayout));
+                .subscribe(new AdapterSubscriber<>(getContext(), dockerImageAdapter, swipeRefreshLayout));
     }
 }

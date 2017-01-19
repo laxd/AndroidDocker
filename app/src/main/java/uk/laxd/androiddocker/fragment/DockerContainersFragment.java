@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.adapter.DockerContainerListAdapter;
 import uk.laxd.androiddocker.dao.DockerDao;
 import uk.laxd.androiddocker.dto.DockerContainer;
+import uk.laxd.androiddocker.rx.AdapterSubscriber;
 
 /**
  * Created by lawrence on 04/01/17.
@@ -89,6 +91,8 @@ public class DockerContainersFragment extends Fragment implements SwipeRefreshLa
     public void onStart() {
         super.onStart();
 
+        Log.i("log", "Starting ContainersFragment");
+
         dockerContainerAdapter = new DockerContainerListAdapter(getActivity(), R.layout.docker_container_list_row, new ArrayList<DockerContainer>());
         listView.setAdapter(dockerContainerAdapter);
 
@@ -100,6 +104,7 @@ public class DockerContainersFragment extends Fragment implements SwipeRefreshLa
 
     @OnItemClick(R.id.container_list)
     public void onContainerClick(int position) {
+        Log.i("log", "Replacing content_frame with container");
         DockerContainer dockerContainer = dockerContainerAdapter.getItem(position);
 
         Bundle bundle = new Bundle();
@@ -119,28 +124,6 @@ public class DockerContainersFragment extends Fragment implements SwipeRefreshLa
                 .getContainers()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<DockerContainer>>() {
-                    @Override
-                    public void onCompleted() {}
-
-                    @Override
-                    public void onError(Throwable e) {
-                        // TODO: Wrap this to make sure context is available
-                        Toast.makeText(getContext(),
-                                "Failed to connect to docker address '" + dockerDao.getDockerAddress().getAddress() + "'",
-                                Toast.LENGTH_LONG)
-                                .show();
-
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-
-                    @Override
-                    public void onNext(List<DockerContainer> dockerContainers) {
-                        dockerContainerAdapter.clear();
-                        dockerContainerAdapter.addAll(dockerContainers);
-
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                });
+                .subscribe(new AdapterSubscriber<>(getContext(), dockerContainerAdapter, swipeRefreshLayout));
     }
 }

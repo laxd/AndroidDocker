@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Created by lawrence on 04/01/17.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DockerDto {
+public abstract class DockerDto {
 
     @JsonProperty
     private String Id;

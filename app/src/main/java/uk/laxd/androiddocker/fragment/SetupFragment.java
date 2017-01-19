@@ -96,13 +96,12 @@ public class SetupFragment extends Fragment {
                 .subscribe(new Subscriber<DockerVersion>() {
                     @Override
                     public void onCompleted() {
-
+                        progressDialog.dismiss();
                     }
 
                     @Override
                     public void onError(Throwable throwable) {
                         Log.w(SetupFragment.class.toString(), "Encountered error while trying to contact docker service", throwable);
-                        progressDialog.cancel();
 
                         Toast toast = Toast.makeText(getActivity(), "Could not contact docker service", Toast.LENGTH_SHORT);
                         toast.show();
@@ -110,15 +109,11 @@ public class SetupFragment extends Fragment {
 
                     @Override
                     public void onNext(DockerVersion dockerVersion) {
-                        if(TextUtils.isEmpty(dockerVersion.getVersion())) {
-                            progressDialog.cancel();
-                        }
-                        else {
+                        if(!TextUtils.isEmpty(dockerVersion.getVersion())) {
                             Log.d(SetupFragment.class.toString(), "Setting up docker address as " + address);
 
                             dockerDao.setDockerAddress(address);
                             dockerServiceFactory.updateDockerAddress(address);
-                            progressDialog.dismiss();
 
 
                             FragmentTransaction tx = getFragmentManager().beginTransaction();
