@@ -3,7 +3,6 @@ package uk.laxd.androiddocker.rx;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
@@ -67,6 +66,7 @@ public class AdapterSubscriber<T> extends Subscriber<Collection<T>> {
 
     @Override
     public void onNext(Collection<T> ts) {
+        adapter.clear();
         adapter.addAll(ts);
     }
 }
