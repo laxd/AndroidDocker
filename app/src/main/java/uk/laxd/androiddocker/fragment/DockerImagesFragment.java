@@ -92,7 +92,7 @@ public class DockerImagesFragment extends Fragment implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
-        dockerService.getImages()
+        dockerService.getImages(true, false)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new AdapterSubscriber<>(getContext(), dockerImageAdapter, swipeRefreshLayout));

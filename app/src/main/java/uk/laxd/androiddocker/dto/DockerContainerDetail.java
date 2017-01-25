@@ -11,6 +11,13 @@ public class DockerContainerDetail extends DockerDto {
     @JsonProperty("Name")
     private String name;
 
+    public DockerContainerDetail() {
+    }
+
+    public DockerContainerDetail(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }

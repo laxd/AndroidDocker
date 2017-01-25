@@ -4,7 +4,7 @@ import java.util.List;
 
 import retrofit2.http.GET;
 import retrofit2.http.Path;
-import retrofit2.http.Url;
+import retrofit2.http.Query;
 import rx.Observable;
 import uk.laxd.androiddocker.dto.DockerContainer;
 import uk.laxd.androiddocker.dto.DockerContainerDetail;
@@ -17,11 +17,14 @@ import uk.laxd.androiddocker.dto.DockerVersion;
 
 public interface DockerService {
 
-    @GET("/containers/json")
+    @GET("/containers/json?all=1")
     Observable<List<DockerContainer>> getContainers();
 
-    @GET("/images/json")
+    @GET("/images/json?dangling=false")
     Observable<List<DockerImage>> getImages();
+
+    @GET("/images/json")
+    Observable<List<DockerImage>> getImages(@Query("all") boolean all, @Query("dangling") boolean dangling);
 
     @GET("/containers/{id}/json")
     Observable<DockerContainerDetail> getContainer(@Path("id") String id);

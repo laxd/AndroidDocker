@@ -10,13 +10,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class DockerContainer extends DockerDto {
 
     @JsonProperty("Names")
-    private String[] names;
+    private String[] names = new String[0];
 
     @JsonProperty("State")
     private String state;
 
     @JsonProperty("Image")
     private String image;
+
+    public DockerContainer() {
+    }
+
+    public DockerContainer(String[] names, String state, String image) {
+        this.names = names;
+        this.state = state;
+        this.image = image;
+    }
 
     public String getName() {
         return names[0].replaceFirst("/", "");

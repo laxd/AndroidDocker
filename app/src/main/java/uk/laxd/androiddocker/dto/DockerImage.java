@@ -10,6 +10,13 @@ public class DockerImage extends DockerDto {
     @JsonProperty("RepoTags")
     private String[] repoTags;
 
+    public DockerImage() {
+    }
+
+    public DockerImage(String... repoTags) {
+        this.repoTags = repoTags;
+    }
+
     public String[] getRepoTags() {
         return repoTags;
     }

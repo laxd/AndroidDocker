@@ -46,6 +46,10 @@ public class AndroidDockerApplication extends SugarApp {
         this.dockerAddress = dockerAddress;
     }
 
+    public void setAndroidDockerComponent(AndroidDockerComponent androidDockerComponent) {
+        this.androidDockerComponent = androidDockerComponent;
+    }
+
     public AndroidDockerComponent getAndroidDockerComponent() {
         return androidDockerComponent;
     }
