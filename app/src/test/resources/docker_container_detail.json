@@ -1,0 +1,225 @@
+{
+  "Id": "5a423808eabad45900bc028485d20d391c4c21cab135e4400d3ab00faeb23d20",
+  "Created": "2017-01-27T21:13:11.296369071Z",
+  "Path": "/portainer",
+  "Args": [],
+  "State": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 5758,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2017-01-27T21:13:12.40539649Z",
+    "FinishedAt": "0001-01-01T00:00:00Z"
+  },
+  "Image": "sha256:0f6293c0231aa6f3a954fe9744f384b47d21b895c6fd0fb07f431e7783e57555",
+  "ResolvConfPath": "/var/lib/docker/containers/5a423808eabad45900bc028485d20d391c4c21cab135e4400d3ab00faeb23d20/resolv.conf",
+  "HostnamePath": "/var/lib/docker/containers/5a423808eabad45900bc028485d20d391c4c21cab135e4400d3ab00faeb23d20/hostname",
+  "HostsPath": "/var/lib/docker/containers/5a423808eabad45900bc028485d20d391c4c21cab135e4400d3ab00faeb23d20/hosts",
+  "LogPath": "/var/lib/docker/containers/5a423808eabad45900bc028485d20d391c4c21cab135e4400d3ab00faeb23d20/5a423808eabad45900bc028485d20d391c4c21cab135e4400d3ab00faeb23d20-json.log",
+  "Name": "/test_container",
+  "RestartCount": 0,
+  "Driver": "devicemapper",
+  "MountLabel": "",
+  "ProcessLabel": "",
+  "AppArmorProfile": "",
+  "ExecIDs": null,
+  "HostConfig": {
+    "Binds": [
+      "/var/run/docker.sock:/var/run/docker.sock"
+    ],
+    "ContainerIDFile": "",
+    "LogConfig": {
+      "Type": "json-file",
+      "Config": {}
+    },
+    "NetworkMode": "default",
+    "PortBindings": {
+      "6789/tcp": [
+        {
+          "HostIp": "",
+          "HostPort": "2345"
+        }
+      ],
+      "9000/tcp": [
+        {
+          "HostIp": "",
+          "HostPort": "9000"
+        },
+        {
+          "HostIp": "",
+          "HostPort": "9001"
+        }
+      ]
+    },
+    "RestartPolicy": {
+      "Name": "no",
+      "MaximumRetryCount": 0
+    },
+    "AutoRemove": false,
+    "VolumeDriver": "",
+    "VolumesFrom": null,
+    "CapAdd": null,
+    "CapDrop": null,
+    "Dns": [],
+    "DnsOptions": [],
+    "DnsSearch": [],
+    "ExtraHosts": null,
+    "GroupAdd": null,
+    "IpcMode": "",
+    "Cgroup": "",
+    "Links": null,
+    "OomScoreAdj": 0,
+    "PidMode": "",
+    "Privileged": false,
+    "PublishAllPorts": false,
+    "ReadonlyRootfs": false,
+    "SecurityOpt": null,
+    "UTSMode": "",
+    "UsernsMode": "",
+    "ShmSize": 67108864,
+    "Runtime": "runc",
+    "ConsoleSize": [
+      0,
+      0
+    ],
+    "Isolation": "",
+    "CpuShares": 0,
+    "Memory": 0,
+    "CgroupParent": "",
+    "BlkioWeight": 0,
+    "BlkioWeightDevice": null,
+    "BlkioDeviceReadBps": null,
+    "BlkioDeviceWriteBps": null,
+    "BlkioDeviceReadIOps": null,
+    "BlkioDeviceWriteIOps": null,
+    "CpuPeriod": 0,
+    "CpuQuota": 0,
+    "CpusetCpus": "",
+    "CpusetMems": "",
+    "Devices": [],
+    "DiskQuota": 0,
+    "KernelMemory": 0,
+    "MemoryReservation": 0,
+    "MemorySwap": 0,
+    "MemorySwappiness": -1,
+    "OomKillDisable": false,
+    "PidsLimit": 0,
+    "Ulimits": null,
+    "CpuCount": 0,
+    "CpuPercent": 0,
+    "IOMaximumIOps": 0,
+    "IOMaximumBandwidth": 0
+  },
+  "GraphDriver": {
+    "Name": "devicemapper",
+    "Data": {
+      "DeviceId": "100",
+      "DeviceName": "docker-8:2-1444652-8f4f549d85dade8dc7b7ce47d5ea630e8e176132444e2fef0b5bc30b8c988cbb",
+      "DeviceSize": "10737418240"
+    }
+  },
+  "Mounts": [
+    {
+      "Source": "/var/run/docker.sock",
+      "Destination": "/var/run/docker.sock",
+      "Mode": "",
+      "RW": true,
+      "Propagation": "rprivate"
+    },
+    {
+      "Name": "a56034ec3bc9d371bf6b0991137b6334e759ccd2bc95e274da9250e3812e9d68",
+      "Source": "/var/lib/docker/volumes/a56034ec3bc9d371bf6b0991137b6334e759ccd2bc95e274da9250e3812e9d68/_data",
+      "Destination": "/data",
+      "Driver": "local",
+      "Mode": "",
+      "RW": true,
+      "Propagation": ""
+    }
+  ],
+  "Config": {
+    "Hostname": "5a423808eaba",
+    "Domainname": "",
+    "User": "",
+    "AttachStdin": false,
+    "AttachStdout": false,
+    "AttachStderr": false,
+    "ExposedPorts": {
+      "6789/tcp": {},
+      "9000/tcp": {}
+    },
+    "Tty": false,
+    "OpenStdin": false,
+    "StdinOnce": false,
+    "Env": [
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    ],
+    "Cmd": null,
+    "Image": "portainer/portainer",
+    "Volumes": {
+      "/data": {}
+    },
+    "WorkingDir": "/",
+    "Entrypoint": [
+      "/portainer"
+    ],
+    "OnBuild": null,
+    "Labels": {}
+  },
+  "NetworkSettings": {
+    "Bridge": "",
+    "SandboxID": "c8bb06ffd656a718efeb4bc46f5f246f9078a9ea9b4c70e685a1c8b098823045",
+    "HairpinMode": false,
+    "LinkLocalIPv6Address": "",
+    "LinkLocalIPv6PrefixLen": 0,
+    "Ports": {
+      "6789/tcp": [
+        {
+          "HostIp": "0.0.0.0",
+          "HostPort": "2345"
+        }
+      ],
+      "9000/tcp": [
+        {
+          "HostIp": "0.0.0.0",
+          "HostPort": "9001"
+        },
+        {
+          "HostIp": "0.0.0.0",
+          "HostPort": "9000"
+        }
+      ]
+    },
+    "SandboxKey": "/var/run/docker/netns/c8bb06ffd656",
+    "SecondaryIPAddresses": null,
+    "SecondaryIPv6Addresses": null,
+    "EndpointID": "4222c1bef4c017d5815fe7696d50886ba80b6650bc2ff80ca04f781bd797532a",
+    "Gateway": "172.17.0.1",
+    "GlobalIPv6Address": "",
+    "GlobalIPv6PrefixLen": 0,
+    "IPAddress": "172.17.0.2",
+    "IPPrefixLen": 16,
+    "IPv6Gateway": "",
+    "MacAddress": "02:42:ac:11:00:02",
+    "Networks": {
+      "bridge": {
+        "IPAMConfig": null,
+        "Links": null,
+        "Aliases": null,
+        "NetworkID": "eaf3b52eda18baaecf1de1928242b0721840a5b1f8c58a7cb00491a8c084883c",
+        "EndpointID": "4222c1bef4c017d5815fe7696d50886ba80b6650bc2ff80ca04f781bd797532a",
+        "Gateway": "172.17.0.1",
+        "IPAddress": "172.17.0.2",
+        "IPPrefixLen": 16,
+        "IPv6Gateway": "",
+        "GlobalIPv6Address": "",
+        "GlobalIPv6PrefixLen": 0,
+        "MacAddress": "02:42:ac:11:00:02"
+      }
+    }
+  }
+}

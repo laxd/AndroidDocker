@@ -3,11 +3,15 @@ package uk.laxd.androiddocker.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -21,6 +25,9 @@ import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.dto.DockerContainerDetail;
+import uk.laxd.androiddocker.dto.Mount;
+import uk.laxd.androiddocker.dto.NetworkSettings;
+import uk.laxd.androiddocker.dto.PortMapping;
 
 /**
  * Created by lawrence on 05/01/17.
@@ -38,6 +45,18 @@ public class DockerContainerFragment extends Fragment {
 
     @BindView(R.id.container_name)
     protected TextView name;
+
+    @BindView(R.id.container_mounts)
+    protected ViewGroup mountContainer;
+
+    @BindView(R.id.gateway)
+    protected TextView gateway;
+
+    @BindView(R.id.ipaddress)
+    protected TextView ipAddress;
+
+    @BindView(R.id.port_binding)
+    protected TextView portBinding;
 
     @Nullable
     @Override
@@ -72,6 +91,44 @@ public class DockerContainerFragment extends Fragment {
                     public void call(DockerContainerDetail dockerContainerDetail) {
                         id.setText(dockerContainerDetail.getId());
                         name.setText(dockerContainerDetail.getName());
+
+                        List<Mount> mounts = dockerContainerDetail.getMounts();
+
+                        // TODO: refactor this out?
+                        for(Mount mount : mounts) {
+                            View view = getLayoutInflater(getArguments()).inflate(R.layout.docker_container_mount_row, null);
+
+                            TextView source = (TextView) view.findViewById(R.id.mount_source);
+                            TextView destination = (TextView) view.findViewById(R.id.mount_destination);
+
+                            source.setText(mount.getSource());
+                            destination.setText(mount.getDestination());
+
+                            mountContainer.addView(view);
+                        }
+
+                        NetworkSettings networkSettings = dockerContainerDetail.getNetworkSettings();
+
+                        gateway.setText(networkSettings.getGateway());
+                        ipAddress.setText(networkSettings.getIp());
+
+                        if(networkSettings.getPorts() != null) {
+                            for(PortMapping portMapping : networkSettings.getPorts().getPortMappings()) {
+                                View view = getLayoutInflater(getArguments()).inflate(R.layout.docker_container_port_mapping_row, null);
+
+                                TextView source = (TextView) view.findViewById(R.id.port_source);
+                                TextView destination = (TextView) view.findViewById(R.id.port_destination);
+
+                                source.setText(portMapping.getSource());
+                                destination.setText(portMapping.getDestinationsAsString());
+                            }
+                        }
+
+                        if(networkSettings.getPorts() != null &&
+                                networkSettings.getPorts().getPortMappings() != null &&
+                                networkSettings.getPorts().getPortMappings().size() > 0) {
+                            portBinding.setText(networkSettings.getPorts().getPortMappings().get(0).getSource());
+                        }
                     }
                 });
     }

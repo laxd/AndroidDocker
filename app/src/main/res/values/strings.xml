@@ -4,8 +4,13 @@
     <string name="show_images">Show Images</string>
     <string name="refresh">refresh</string>
     <string name="setup_guide">Setup Guide</string>
-    <string name="setup_text">Address of your docker serviceR</string>
+    <string name="setup_text">Address of your docker service</string>
     <string name="submit">Submit</string>
-    <string name="image_label">Image: </string>
-    <string name="name_label">Name: </string>
+    <string name="image">Image</string>
+    <string name="name">Name</string>
+    <string name="mounts">Mounts</string>
+    <string name="id">Id</string>
+    <string name="gateway">Gateway</string>
+    <string name="ipaddress">IP Address</string>
+    <string name="port_bindings">Port Bindings</string>
 </resources>

@@ -13,19 +13,74 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
 
+
+        <TextView
+            android:labelFor="@+id/container_id"
+            android:text="@string/id"
+            style="@style/Label"/>
         <TextView
             android:id="@+id/container_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+
+        <TextView
+            android:labelFor="@+id/container_name"
+            android:text="@string/name"
+            style="@style/Label"/>
         <TextView
             android:id="@+id/container_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+
+        <TextView
+            android:labelFor="@+id/container_image"
+            android:text="@string/image"
+            style="@style/Label"/>
         <TextView
             android:id="@+id/container_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <TextView
+            android:labelFor="@+id/container_mounts"
+            android:text="@string/mounts"
+            style="@style/Label"/>
+
+        <LinearLayout
+            android:id="@+id/container_mounts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <TextView
+            android:labelFor="@+id/gateway"
+            android:text="@string/gateway"
+            style="@style/Label"/>
+        <TextView
+            android:id="@+id/gateway"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+        <TextView
+            android:labelFor="@+id/ipaddress"
+            android:text="@string/ipaddress"
+            style="@style/Label"/>
+        <TextView
+            android:id="@+id/ipaddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:labelFor="@+id/port_binding"
+            android:text="@string/port_bindings"
+            style="@style/Label"/>
+        <TextView
+            android:id="@+id/port_binding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 </LinearLayout>

@@ -20,6 +20,9 @@ public interface DockerService {
     @GET("/containers/json?all=1")
     Observable<List<DockerContainer>> getContainers();
 
+    @GET("/containers/json")
+    Observable<List<DockerContainer>> getContainers(@Query("all") boolean includeStopped);
+
     @GET("/images/json?dangling=false")
     Observable<List<DockerImage>> getImages();
 
