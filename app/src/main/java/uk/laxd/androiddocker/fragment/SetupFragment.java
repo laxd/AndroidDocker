@@ -1,11 +1,9 @@
 package uk.laxd.androiddocker.fragment;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
@@ -105,6 +103,8 @@ public class SetupFragment extends Fragment {
 
                         Toast toast = Toast.makeText(getActivity(), "Could not contact docker service", Toast.LENGTH_SHORT);
                         toast.show();
+
+                        progressDialog.dismiss();
                     }
 
                     @Override
@@ -115,9 +115,8 @@ public class SetupFragment extends Fragment {
                             dockerDao.setDockerAddress(address);
                             dockerServiceFactory.updateDockerAddress(address);
 
-
                             FragmentTransaction tx = getFragmentManager().beginTransaction();
-                            tx.replace(R.id.content_frame, Fragment.instantiate(getActivity(), "DockerContainersFragment", null));
+                            tx.replace(R.id.content_frame, new DockerContainersFragment());
                             tx.commit();
                         }
                     }
