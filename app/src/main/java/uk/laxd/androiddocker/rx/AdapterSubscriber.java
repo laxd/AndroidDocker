@@ -54,6 +54,8 @@ public class AdapterSubscriber<T> extends Subscriber<Collection<T>> {
         if(progressDialog != null) {
             progressDialog.dismiss();
         }
+
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -62,6 +64,12 @@ public class AdapterSubscriber<T> extends Subscriber<Collection<T>> {
                 "Failed to connect to docker address",
                 Toast.LENGTH_LONG)
                 .show();
+
+        if(swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(false);
+        }
+
+        adapter.notifyDataSetChanged();
     }
 
     @Override
