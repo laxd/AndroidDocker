@@ -26,11 +26,23 @@ public class NetworkSettings {
         return gateway;
     }
 
+    public void setGateway(String gateway) {
+        this.gateway = gateway;
+    }
+
     public String getIp() {
         return ip;
     }
 
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
     public Ports getPorts() {
         return ports;
+    }
+
+    public void setPorts(Ports ports) {
+        this.ports = ports;
     }
 }

@@ -15,4 +15,8 @@ public abstract class DockerDto {
     public String getId() {
         return Id;
     }
+
+    public void setId(String id) {
+        Id = id;
+    }
 }

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -45,6 +46,9 @@ public class DockerContainersFragment extends Fragment implements SwipeRefreshLa
     @BindView(R.id.container_list)
     protected ListView listView;
 
+    @BindView(R.id.empty_list)
+    protected TextView textView;
+
     @Inject
     protected DockerServiceFactory dockerServiceFactory;
 
@@ -60,7 +64,6 @@ public class DockerContainersFragment extends Fragment implements SwipeRefreshLa
         ((AndroidDockerApplication) getActivity().getApplication())
                 .getAndroidDockerComponent()
                 .inject(this);
-
     }
 
     @Nullable
@@ -69,6 +72,8 @@ public class DockerContainersFragment extends Fragment implements SwipeRefreshLa
         View view = inflater.inflate(R.layout.docker_containers, null);
 
         unbinder = ButterKnife.bind(this, view);
+
+        listView.setEmptyView(textView);
 
         return view;
 

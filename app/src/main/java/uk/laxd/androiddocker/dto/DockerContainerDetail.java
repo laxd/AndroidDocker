@@ -2,6 +2,7 @@ package uk.laxd.androiddocker.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ public class DockerContainerDetail extends DockerDto {
     private String name;
 
     @JsonProperty("Mounts")
-    private List<Mount> mounts;
+    private List<Mount> mounts = new ArrayList<>();
 
     @JsonProperty("NetworkSettings")
     private NetworkSettings networkSettings;
@@ -30,11 +31,19 @@ public class DockerContainerDetail extends DockerDto {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public List<Mount> getMounts() {
         return mounts;
     }
 
     public NetworkSettings getNetworkSettings() {
         return networkSettings;
+    }
+
+    public void setNetworkSettings(NetworkSettings networkSettings) {
+        this.networkSettings = networkSettings;
     }
 }

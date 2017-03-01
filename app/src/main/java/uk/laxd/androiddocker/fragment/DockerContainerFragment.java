@@ -109,25 +109,27 @@ public class DockerContainerFragment extends Fragment {
 
                         NetworkSettings networkSettings = dockerContainerDetail.getNetworkSettings();
 
-                        gateway.setText(networkSettings.getGateway());
-                        ipAddress.setText(networkSettings.getIp());
+                        if(networkSettings != null) {
+                            gateway.setText(networkSettings.getGateway());
+                            ipAddress.setText(networkSettings.getIp());
 
-                        if(networkSettings.getPorts() != null) {
-                            for(PortMapping portMapping : networkSettings.getPorts().getPortMappings()) {
-                                View view = getLayoutInflater(getArguments()).inflate(R.layout.docker_container_port_mapping_row, null);
+                            if(networkSettings.getPorts() != null) {
+                                for(PortMapping portMapping : networkSettings.getPorts().getPortMappings()) {
+                                    View view = getLayoutInflater(getArguments()).inflate(R.layout.docker_container_port_mapping_row, null);
 
-                                TextView source = (TextView) view.findViewById(R.id.port_source);
-                                TextView destination = (TextView) view.findViewById(R.id.port_destination);
+                                    TextView source = (TextView) view.findViewById(R.id.port_source);
+                                    TextView destination = (TextView) view.findViewById(R.id.port_destination);
 
-                                source.setText(portMapping.getSource());
-                                destination.setText(portMapping.getDestinationsAsString());
+                                    source.setText(portMapping.getSource());
+                                    destination.setText(portMapping.getDestinationsAsString());
+                                }
                             }
-                        }
 
-                        if(networkSettings.getPorts() != null &&
-                                networkSettings.getPorts().getPortMappings() != null &&
-                                networkSettings.getPorts().getPortMappings().size() > 0) {
-                            portBinding.setText(networkSettings.getPorts().getPortMappings().get(0).getSource());
+                            if(networkSettings.getPorts() != null &&
+                                    networkSettings.getPorts().getPortMappings() != null &&
+                                    networkSettings.getPorts().getPortMappings().size() > 0) {
+                                portBinding.setText(networkSettings.getPorts().getPortMappings().get(0).getSource());
+                            }
                         }
                     }
                 });

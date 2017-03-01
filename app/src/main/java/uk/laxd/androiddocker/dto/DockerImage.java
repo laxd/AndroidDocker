@@ -20,4 +20,8 @@ public class DockerImage extends DockerDto {
     public String[] getRepoTags() {
         return repoTags;
     }
+
+    public void setRepoTags(String[] repoTags) {
+        this.repoTags = repoTags;
+    }
 }

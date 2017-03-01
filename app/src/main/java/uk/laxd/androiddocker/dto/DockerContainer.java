@@ -2,6 +2,9 @@ package uk.laxd.androiddocker.dto;
 
 import android.util.Log;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -13,7 +16,7 @@ public class DockerContainer extends DockerDto {
     private String[] names = new String[0];
 
     @JsonProperty("State")
-    private String state;
+    private ContainerState state;
 
     @JsonProperty("Image")
     private String image;
@@ -21,24 +24,44 @@ public class DockerContainer extends DockerDto {
     public DockerContainer() {
     }
 
-    public DockerContainer(String[] names, String state, String image) {
+    public DockerContainer(String[] names, ContainerState state, String image) {
         this.names = names;
         this.state = state;
         this.image = image;
     }
 
     public String getName() {
+        if(names.length == 0) {
+            return "";
+        }
         return names[0].replaceFirst("/", "");
     }
 
+    public String[] getNames() {
+        return names;
+    }
+
+    public void setNames(String[] names) {
+        this.names = names;
+    }
+
     public ContainerState getState() {
-        return ContainerState.getState(state);
+        return state;
+    }
+
+    public void setState(ContainerState state) {
+        this.state = state;
     }
 
     public String getImage() {
         return image;
     }
 
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     public enum ContainerState {
 
         CREATED("created", android.R.color.holo_red_dark),
@@ -49,6 +72,8 @@ public class DockerContainer extends DockerDto {
         DEAD("dead", android.R.color.holo_red_dark);
 
         private String stateName;
+
+        @JsonIgnore
         private int imageResource;
 
         ContainerState(String stateName, int imageResource) {
@@ -56,6 +81,7 @@ public class DockerContainer extends DockerDto {
             this.imageResource = imageResource;
         }
 
+        @JsonCreator
         public static ContainerState getState(String state) {
             for(ContainerState containerState : values()) {
                 if(containerState.stateName.equals(state)) {

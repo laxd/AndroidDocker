@@ -103,8 +103,6 @@ public class SetupFragment extends Fragment {
 
                         Toast toast = Toast.makeText(getActivity(), "Could not contact docker service", Toast.LENGTH_SHORT);
                         toast.show();
-
-                        progressDialog.dismiss();
                     }
 
                     @Override
@@ -118,6 +116,12 @@ public class SetupFragment extends Fragment {
                             FragmentTransaction tx = getFragmentManager().beginTransaction();
                             tx.replace(R.id.content_frame, new DockerContainersFragment());
                             tx.commit();
+                        }
+                        else {
+                            Log.w(SetupFragment.class.toString(), "Invalid version received from docker");
+
+                            Toast toast = Toast.makeText(getActivity(), "Could not contact docker service", Toast.LENGTH_SHORT);
+                            toast.show();
                         }
                     }
                 });

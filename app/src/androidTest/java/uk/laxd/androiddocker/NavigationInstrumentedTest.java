@@ -1,5 +1,6 @@
 package uk.laxd.androiddocker;
 
+import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.contrib.DrawerActions;
 import android.support.test.rule.ActivityTestRule;
@@ -22,8 +23,10 @@ import uk.laxd.androiddocker.domain.DockerServer;
 import uk.laxd.androiddocker.dto.DockerContainer;
 import uk.laxd.androiddocker.dto.DockerContainerDetail;
 import uk.laxd.androiddocker.dto.DockerImage;
+import uk.laxd.androiddocker.dto.NetworkSettings;
 import uk.laxd.androiddocker.module.RetrofitModule;
 
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 
@@ -40,14 +43,18 @@ import static org.mockito.Mockito.*;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
-public class ExampleInstrumentedTest {
+public class NavigationInstrumentedTest extends AbstractInstrumentedTestSetup {
 
+    private static final String SETUP_GUIDE = "Setup Guide";
     private static final String CONTAINER_NAME = "testContainer";
     private static final String IMAGE_NAME = "testImage";
     private static final String DOCKER_ADDRESS = "http://testAddress:4243";
-
-
     private static final String MENU_ITEM_IMAGES = "Images";
+    private static final String GATEWAY = "192.168.0.1";
+
+    @Rule
+    public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class, true, false);
+
 
     @Rule
     public DaggerMockRule<AndroidDockerComponent> daggerMockRule = new DaggerMockRule<>(AndroidDockerComponent.class, new RetrofitModule())
@@ -61,30 +68,37 @@ public class ExampleInstrumentedTest {
                 }
             });
 
-    @Rule
-    public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class, true, false);
+    @Mock
+    public DockerDao dockerDao;
+    @Mock
+    public DockerServiceFactory dockerServiceFactory;
+    @Mock
+    public DockerService dockerService;
 
-    @Mock DockerDao dockerDao;
-
-    @Mock DockerServiceFactory dockerServiceFactory;
-
-    @Mock DockerService dockerService;
 
     @Before
     public void setUp() throws Exception {
+
         when(dockerDao.getDockerAddress())
                 .thenReturn(new DockerServer(DOCKER_ADDRESS));
 
         when(dockerServiceFactory.getDockerService())
                 .thenReturn(dockerService);
 
+
         List<DockerContainer> dockerContainers = new ArrayList<>();
         dockerContainers.add(new DockerContainer(new String[]{CONTAINER_NAME},
-                DockerContainer.ContainerState.RUNNING.toString(),
+                DockerContainer.ContainerState.RUNNING,
                 IMAGE_NAME));
 
         when(dockerService.getContainers())
                 .thenReturn(Observable.just(dockerContainers));
+
+        NetworkSettings networkSettings = new NetworkSettings();
+        networkSettings.setGateway(GATEWAY);
+
+        DockerContainerDetail dockerContainerDetail = new DockerContainerDetail(CONTAINER_NAME);
+        dockerContainerDetail.setNetworkSettings(networkSettings);
 
         when(dockerService.getContainer(anyString()))
                 .thenReturn(Observable.just(new DockerContainerDetail(CONTAINER_NAME)));
@@ -95,31 +109,34 @@ public class ExampleInstrumentedTest {
         when(dockerService.getImages(anyBoolean(), anyBoolean()))
                 .thenReturn(Observable.just(dockerImages));
 
+        activityTestRule.launchActivity(null);
     }
 
     @Test
     public void testContainersFragmentLoaded() throws Exception {
-        activityTestRule.launchActivity(null);
-
         onView(withId(R.id.container_list)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testImagesFragmentLoadedOnClick() throws Exception {
-        activityTestRule.launchActivity(null);
-
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open());
-        onView(withText(MENU_ITEM_IMAGES)).perform(click());
+        navigate(MENU_ITEM_IMAGES, true, false);
 
         onView(withId(R.id.image_list)).check(matches(isDisplayed()));
     }
 
     @Test
     public void testContainerFragmentLoadedOnClick() throws Exception {
-        activityTestRule.launchActivity(null);
-
         onView(withText(CONTAINER_NAME)).perform(click());
 
         onView(withId(R.id.container_name)).check(matches(isDisplayed()));
     }
+
+    @Test
+    public void testSetupFragmentLoaded() throws Exception {
+        navigate(SETUP_GUIDE, false, true);
+
+        onView(withId(R.id.docker_address)).check(matches(isDisplayed()));
+    }
+
+
 }
