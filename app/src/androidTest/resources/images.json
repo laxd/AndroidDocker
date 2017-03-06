@@ -1,0 +1,50 @@
+[
+    {
+        "Containers": -1,
+        "Created": 1488331461,
+        "Id": "sha256:4452dae04daa9335913ba04c1367c5baa4df268f6d14f51b0487f438f6e0204b",
+        "Labels": {},
+        "ParentId": "",
+        "RepoDigests": [
+            "tomcat@sha256:21558e06efcb2b678f86673db618ac2d6d91635298ef88994f41a9e62787d3ee"
+        ],
+        "RepoTags": [
+            "tomcat:latest"
+        ],
+        "SharedSize": -1,
+        "Size": 355359449,
+        "VirtualSize": 355359449
+    },
+    {
+        "Containers": -1,
+        "Created": 1488265023,
+        "Id": "sha256:22be5748ecbeb09909d84e487838af7c64099959d707e5addfbb6177f334923e",
+        "Labels": {},
+        "ParentId": "",
+        "RepoDigests": [
+            "mysql@sha256:6d4b33d189d62afe590ee4b35f92aae31ffa79ccc4d4db8bd3d3b893c8019596"
+        ],
+        "RepoTags": [
+            "mysql:latest"
+        ],
+        "SharedSize": -1,
+        "Size": 405620211,
+        "VirtualSize": 405620211
+    },
+    {
+        "Containers": -1,
+        "Created": 1480623321,
+        "Id": "sha256:a39b6884e445486891be865381582412241d10baf2d53e11c6a8aa0ad181c89c",
+        "Labels": {},
+        "ParentId": "sha256:63a8e05d49d1a55046f06a858013c8e7e22c2b1e179083c05b2b6e6041242e36",
+        "RepoDigests": [
+            "<none>@<none>"
+        ],
+        "RepoTags": [
+            "<none>:<none>"
+        ],
+        "SharedSize": -1,
+        "Size": 181456951,
+        "VirtualSize": 181456951
+    }
+]

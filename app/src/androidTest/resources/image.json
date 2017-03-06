@@ -1,0 +1,114 @@
+{
+    "Id": "sha256:22be5748ecbeb09909d84e487838af7c64099959d707e5addfbb6177f334923e",
+    "RepoTags": [
+        "mysql:latest"
+    ],
+    "RepoDigests": [
+        "mysql@sha256:6d4b33d189d62afe590ee4b35f92aae31ffa79ccc4d4db8bd3d3b893c8019596"
+    ],
+    "Parent": "",
+    "Comment": "",
+    "Created": "2017-02-28T06:57:03.511780704Z",
+    "Container": "db3dd980195e847afbc224dad7bc2e789483b812fcf7b322300fe2a57117b046",
+    "ContainerConfig": {
+        "Hostname": "ed11f485244a",
+        "Domainname": "",
+        "User": "",
+        "AttachStdin": false,
+        "AttachStdout": false,
+        "AttachStderr": false,
+        "ExposedPorts": {
+            "3306/tcp": {}
+        },
+        "Tty": false,
+        "OpenStdin": false,
+        "StdinOnce": false,
+        "Env": [
+            "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+            "GOSU_VERSION=1.7",
+            "MYSQL_MAJOR=5.7",
+            "MYSQL_VERSION=5.7.17-1debian8"
+        ],
+        "Cmd": [
+            "/bin/sh",
+            "-c",
+            "#(nop) ",
+            "CMD [\"mysqld\"]"
+        ],
+        "ArgsEscaped": true,
+        "Image": "sha256:5c162e13f0a95986c50a63cd69074d605e2c815f1058c90a145374fbe593d16a",
+        "Volumes": {
+            "/var/lib/mysql": {}
+        },
+        "WorkingDir": "",
+        "Entrypoint": [
+            "docker-entrypoint.sh"
+        ],
+        "OnBuild": [],
+        "Labels": {}
+    },
+    "DockerVersion": "1.12.6",
+    "Author": "",
+    "Config": {
+        "Hostname": "ed11f485244a",
+        "Domainname": "",
+        "User": "",
+        "AttachStdin": false,
+        "AttachStdout": false,
+        "AttachStderr": false,
+        "ExposedPorts": {
+            "3306/tcp": {}
+        },
+        "Tty": false,
+        "OpenStdin": false,
+        "StdinOnce": false,
+        "Env": [
+            "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+            "GOSU_VERSION=1.7",
+            "MYSQL_MAJOR=5.7",
+            "MYSQL_VERSION=5.7.17-1debian8"
+        ],
+        "Cmd": [
+            "mysqld"
+        ],
+        "ArgsEscaped": true,
+        "Image": "sha256:5c162e13f0a95986c50a63cd69074d605e2c815f1058c90a145374fbe593d16a",
+        "Volumes": {
+            "/var/lib/mysql": {}
+        },
+        "WorkingDir": "",
+        "Entrypoint": [
+            "docker-entrypoint.sh"
+        ],
+        "OnBuild": [],
+        "Labels": {}
+    },
+    "Architecture": "amd64",
+    "Os": "linux",
+    "Size": 405620211,
+    "VirtualSize": 405620211,
+    "GraphDriver": {
+        "Name": "devicemapper",
+        "Data": {
+            "DeviceId": "114",
+            "DeviceName": "docker-8:2-1444652-4068ad1a519e1899da6bc5b8dea0b84cb541de411cb35e416765b7363fb67a9d",
+            "DeviceSize": "10737418240"
+        }
+    },
+    "RootFS": {
+        "Type": "layers",
+        "Layers": [
+            "sha256:d17d48b2382adda1fd94284c51d725f0226bf20b07f4d29ce09596788bed7e8e",
+            "sha256:a8b7b794fc4e1d2862b8bae7aa36fd0404ba366095b36e445e0a426bc1c4161f",
+            "sha256:d57d8c8d5bd6e80fb916a61e5c626c142bb1abe3a91b865709b278b79e98e036",
+            "sha256:1e1a0fe061bdc15847389e086dfcb2f43d0c65a437d61ef9c03959d5cb9fd7bf",
+            "sha256:84b5ee4df7ea3d4c5958a12e5565c8e52a8e36e59b92e24626d1eac6a1584cad",
+            "sha256:aa0e91e1a71b9fd2979c62a4d9cb8e8e436b49a4c86a80dc884dc324d2feb219",
+            "sha256:6b5e69e0ba6854bf7085cc61aa4a38f4e01f2c177512f8a14b46f055f9d07936",
+            "sha256:d0c759d8bfa76e11d92fbde14c52aa6cfe330ed51027aaf2b121b308e8c28ef1",
+            "sha256:fc2279652be62edb980c201452c2e4f5b95c4fa4d64ced109aaed8e0a5b59f1a",
+            "sha256:609f29a4e055eb3b4780d31379b64601e9947a1e9846aa8529a63fca5978164f",
+            "sha256:150347d94fd6ff401bab885ba4dd462fb3349f4dcde3decaaefed3224fb40a1a"
+        ]
+    }
+}

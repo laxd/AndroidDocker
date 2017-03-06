@@ -1,0 +1,99 @@
+[
+    {
+        "Id": "e9994c62f0aef20db83d692c4fde7009b824f6ca944485415086c4d206ecd858",
+        "Names": [
+            "/test_mysql"
+        ],
+        "Image": "mysql",
+        "ImageID": "sha256:22be5748ecbeb09909d84e487838af7c64099959d707e5addfbb6177f334923e",
+        "Command": "docker-entrypoint.sh mysqld",
+        "Created": 1488808261,
+        "Ports": [
+            {
+                "IP": "0.0.0.0",
+                "PrivatePort": 3306,
+                "PublicPort": 32770,
+                "Type": "tcp"
+            }
+        ],
+        "Labels": {},
+        "State": "running",
+        "Status": "Up 16 seconds",
+        "HostConfig": {
+            "NetworkMode": "default"
+        },
+        "NetworkSettings": {
+            "Networks": {
+                "bridge": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "NetworkID": "383e53cd5bc08501ebc2d2ea53d540280f87aa604aa943d09673dd66a328c10b",
+                    "EndpointID": "a81c3c2ad0bf0f1e796d0161f346818e99f150e0989f2ec4d62f69362853b1e7",
+                    "Gateway": "172.17.0.1",
+                    "IPAddress": "172.17.0.3",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "02:42:ac:11:00:03"
+                }
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "14a67a4d7815593baaadb8a96f60466ce37c530c2b5d424147011c11604c6c44",
+                "Source": "/var/lib/docker/volumes/14a67a4d7815593baaadb8a96f60466ce37c530c2b5d424147011c11604c6c44/_data",
+                "Destination": "/var/lib/mysql",
+                "Driver": "local",
+                "Mode": "",
+                "RW": true,
+                "Propagation": ""
+            }
+        ]
+    },
+    {
+        "Id": "a5f6631f418f2d23208f9527c276691334db3848c4dbb242b33d0c86252ab724",
+        "Names": [
+            "/test_tomcat"
+        ],
+        "Image": "tomcat",
+        "ImageID": "sha256:4452dae04daa9335913ba04c1367c5baa4df268f6d14f51b0487f438f6e0204b",
+        "Command": "catalina.sh run",
+        "Created": 1488807887,
+        "Ports": [
+            {
+                "IP": "0.0.0.0",
+                "PrivatePort": 8080,
+                "PublicPort": 32769,
+                "Type": "tcp"
+            }
+        ],
+        "Labels": {},
+        "State": "running",
+        "Status": "Up 6 minutes",
+        "HostConfig": {
+            "NetworkMode": "default"
+        },
+        "NetworkSettings": {
+            "Networks": {
+                "bridge": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "NetworkID": "383e53cd5bc08501ebc2d2ea53d540280f87aa604aa943d09673dd66a328c10b",
+                    "EndpointID": "529803a6150b75459c3fcfe3e5a1e9084a83ad7b006db4265ca7adb0187f2131",
+                    "Gateway": "172.17.0.1",
+                    "IPAddress": "172.17.0.2",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "02:42:ac:11:00:02"
+                }
+            }
+        },
+        "Mounts": []
+    }
+]
