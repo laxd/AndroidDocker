@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 ext {
     supportLibraryVersion = '25.1.0'
     espressoVersion = '2.2.2'
-    retrofitVersion = '2.1.0'
+    retrofitVersion = '2.2.0'
     daggerVersion = '2.8'
     butterknifeVersion = '8.4.0'
 }
@@ -68,6 +68,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.19'
     testCompile 'commons-io:commons-io:2.4'
+    androidTestCompile 'commons-io:commons-io:2.4'
     androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
 
@@ -92,6 +93,6 @@ dependencies {
         exclude module: 'recyclerview-v7'
     }
 
+    androidTestCompile ('com.squareup.okhttp3:mockwebserver:3.6.0')
     androidTestCompile 'com.github.fabioCollini:DaggerMock:0.6.3'
-
 }

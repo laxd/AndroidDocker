@@ -7,6 +7,7 @@ import dagger.Provides;
 import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.dao.DockerDao;
 import uk.laxd.androiddocker.domain.DockerServer;
+import uk.laxd.androiddocker.service.DockerConnectivityService;
 
 /**
  * Created by lawrence on 05/01/17.
@@ -32,6 +33,11 @@ public class RetrofitModule {
         }
 
         return factory;
+    }
 
+    @Provides
+    @Singleton
+    public DockerConnectivityService provideDockerConnectivityService() {
+        return new DockerConnectivityService();
     }
 }
