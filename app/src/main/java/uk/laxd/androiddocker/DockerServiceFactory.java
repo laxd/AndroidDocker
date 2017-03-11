@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
+import timber.log.Timber;
 
 /**
  * Created by lawrence on 11/01/17.
@@ -40,7 +41,7 @@ public class DockerServiceFactory {
     }
 
     public void updateDockerAddress(String address) {
-        Log.i("DockerServiceFactory", "Updating docker address to '" + address + "'");
+        Timber.i("Updating docker address to '%s'", address);
 
         instance = createWithAddress(address);
     }

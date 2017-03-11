@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import timber.log.Timber;
 import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.dto.DockerDto;
 
@@ -24,7 +25,7 @@ public abstract class DockerDtoListFragment extends Fragment {
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("log", "Replacing content_frame with container");
+                Timber.i("Replacing content_frame with container");
                 DockerDto dockerDto = (DockerDto) getListView().getAdapter().getItem(position);
 
                 Bundle bundle = new Bundle();

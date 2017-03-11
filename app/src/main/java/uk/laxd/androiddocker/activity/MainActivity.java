@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
+import timber.log.Timber;
 import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.dao.DockerDao;
@@ -90,12 +91,12 @@ public class MainActivity extends AppCompatActivity {
         Fragment fragment;
 
         if(dockerDao.requiresSetup()) {
-            Log.i(MainActivity.class.toString(), "Docker address not setup yet, redirecting to SetupFragment");
+            Timber.i("Docker address not setup yet, redirecting to SetupFragment");
 
             fragment = new SetupFragment();
         }
         else {
-            Log.i(MainActivity.class.toString(), "Using " + dockerDao.getDockerAddress().getAddress() + " as address.");
+            Timber.i("Using '%s' as address.", dockerDao.getDockerAddress().getAddress());
 
             fragment = new DockerContainersFragment();
         }

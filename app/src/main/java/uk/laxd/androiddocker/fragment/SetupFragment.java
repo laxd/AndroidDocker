@@ -24,6 +24,7 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.DockerVersionServiceFactory;
@@ -100,7 +101,7 @@ public class SetupFragment extends Fragment {
 
                         @Override
                         public void onError(Throwable e) {
-                            Log.w(SetupFragment.class.toString(), "Failed to connect to docker");
+                            Timber.w("Failed to connect to docker");
 
                             Toast toast = Toast.makeText(getActivity(), "Could not contact docker service", Toast.LENGTH_SHORT);
                             toast.show();
@@ -110,7 +111,7 @@ public class SetupFragment extends Fragment {
 
                         @Override
                         public void onNext(DockerVersion dockerVersion) {
-                            Log.d(SetupFragment.class.toString(), "Connected to docker v" + dockerVersion.getVersion() + ", API v" + dockerVersion.getApiVersion());
+                            Timber.d("Connected to docker v%s, API v%s", dockerVersion.getVersion(), dockerVersion.getApiVersion());
 
                             dockerDao.setDockerAddress(address);
                             dockerServiceFactory.updateDockerAddress(address);

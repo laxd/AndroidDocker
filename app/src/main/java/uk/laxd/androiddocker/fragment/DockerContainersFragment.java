@@ -23,6 +23,7 @@ import butterknife.Unbinder;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.R;
@@ -93,7 +94,7 @@ public class DockerContainersFragment extends DockerDtoListFragment implements S
     public void onStart() {
         super.onStart();
 
-        Log.i("log", "Starting ContainersFragment");
+        Timber.i("Starting ContainersFragment");
 
         dockerContainerAdapter = new DockerContainerListAdapter(getActivity(), R.layout.docker_container_list_row, new ArrayList<DockerContainer>());
         listView.setAdapter(dockerContainerAdapter);

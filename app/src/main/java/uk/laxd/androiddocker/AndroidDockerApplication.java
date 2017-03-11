@@ -4,6 +4,7 @@ import com.orm.SugarApp;
 
 import javax.inject.Inject;
 
+import timber.log.Timber;
 import uk.laxd.androiddocker.dao.DockerDao;
 import uk.laxd.androiddocker.domain.DockerServer;
 
@@ -23,6 +24,10 @@ public class AndroidDockerApplication extends SugarApp {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
 
         androidDockerComponent = DaggerAndroidDockerComponent.create();
 

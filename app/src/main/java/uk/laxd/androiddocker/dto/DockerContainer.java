@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import timber.log.Timber;
+
 /**
  * Created by lawrence on 04/01/17.
  */
@@ -89,7 +91,7 @@ public class DockerContainer extends DockerDto {
                 }
             }
 
-            Log.w(DockerContainer.class.toString(), "Couldn't find state '" + state + "', assuming 'exited' instead");
+            Timber.w("Couldn't find state '%s', assuming 'exited' instead", state);
             return EXITED;
         }
 
