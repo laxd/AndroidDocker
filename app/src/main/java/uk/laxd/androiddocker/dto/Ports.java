@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
 import uk.laxd.androiddocker.PortsDeserialiser;
 
 /**
@@ -13,11 +14,7 @@ import uk.laxd.androiddocker.PortsDeserialiser;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonDeserialize(using = PortsDeserialiser.class)
+@Getter
 public class Ports {
-
-    private List<PortMapping> portMappings = new ArrayList<>();
-
-    public List<PortMapping> getPortMappings() {
-        return portMappings;
-    }
+    private final List<PortMapping> portMappings = new ArrayList<>();
 }

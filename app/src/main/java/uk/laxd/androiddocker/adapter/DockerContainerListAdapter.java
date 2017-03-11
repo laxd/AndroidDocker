@@ -2,6 +2,7 @@ package uk.laxd.androiddocker.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -31,7 +32,7 @@ public class DockerContainerListAdapter extends ViewHolderArrayAdapter<DockerCon
         DockerContainer dockerContainer = getItem(position);
 
         if(dockerContainer != null) {
-            holder.nameTextView.setText(dockerContainer.getName());
+            holder.nameTextView.setText(dockerContainer.getNames()[0].substring(1));
             holder.imageNameTextView.setText(dockerContainer.getImage());
             holder.containerStatusView.setBackgroundResource(dockerContainer.getState().getImageResource());
             holder.containerStatusView.setText(dockerContainer.getState().name().toUpperCase());
