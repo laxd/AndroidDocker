@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 import uk.laxd.androiddocker.fragment.DockerContainerFragment;
 import uk.laxd.androiddocker.fragment.DockerContainersFragment;
+import uk.laxd.androiddocker.fragment.DockerImageFragment;
 import uk.laxd.androiddocker.fragment.DockerImagesFragment;
 import uk.laxd.androiddocker.activity.MainActivity;
 import uk.laxd.androiddocker.fragment.SetupFragment;
@@ -21,5 +22,6 @@ public interface AndroidDockerComponent {
     void inject(DockerContainersFragment dockerContainersActivity);
     void inject(DockerContainerFragment dockerContainerFragment);
     void inject(SetupFragment setupFragment);
+    void inject(DockerImageFragment dockerImageFragment);
     void inject(AndroidDockerApplication androidDockerApplication);
 }

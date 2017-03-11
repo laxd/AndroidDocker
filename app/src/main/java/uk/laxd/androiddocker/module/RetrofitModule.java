@@ -5,9 +5,9 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import uk.laxd.androiddocker.DockerServiceFactory;
+import uk.laxd.androiddocker.DockerVersionServiceFactory;
 import uk.laxd.androiddocker.dao.DockerDao;
 import uk.laxd.androiddocker.domain.DockerServer;
-import uk.laxd.androiddocker.service.DockerConnectivityService;
 
 /**
  * Created by lawrence on 05/01/17.
@@ -23,7 +23,7 @@ public class RetrofitModule {
 
     @Provides
     @Singleton
-    public DockerServiceFactory proviceDockerServerFactory(DockerDao dockerDao) {
+    public DockerServiceFactory provideDockerServiceFactory(DockerDao dockerDao) {
         DockerServiceFactory factory = new DockerServiceFactory();
 
         DockerServer dockerServer = dockerDao.getDockerAddress();
@@ -37,7 +37,7 @@ public class RetrofitModule {
 
     @Provides
     @Singleton
-    public DockerConnectivityService provideDockerConnectivityService() {
-        return new DockerConnectivityService();
+    public DockerVersionServiceFactory provideDockerVersionServiceFactory() {
+        return new DockerVersionServiceFactory();
     }
 }

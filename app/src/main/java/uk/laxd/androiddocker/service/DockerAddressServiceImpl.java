@@ -3,6 +3,7 @@ package uk.laxd.androiddocker.service;
 import javax.inject.Inject;
 
 import uk.laxd.androiddocker.DockerServiceFactory;
+import uk.laxd.androiddocker.DockerVersionServiceFactory;
 import uk.laxd.androiddocker.dao.DockerDao;
 
 /**
@@ -15,6 +16,9 @@ public class DockerAddressServiceImpl implements DockerAddressService {
 
     @Inject
     protected DockerServiceFactory dockerServiceFactory;
+
+    @Inject
+    protected DockerVersionServiceFactory dockerVersionServiceFactory;
 
     @Override
     public boolean isSetup() {
@@ -36,7 +40,7 @@ public class DockerAddressServiceImpl implements DockerAddressService {
     @Override
     public boolean isValid(String address) {
         try {
-            return (dockerServiceFactory.createWithAddress(address)
+            return (dockerVersionServiceFactory.getForAddress(address)
                     .getVersion() != null);
         } catch (IllegalArgumentException e) {
             // Not a valid URL

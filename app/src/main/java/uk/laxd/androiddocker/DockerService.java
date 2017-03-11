@@ -29,9 +29,9 @@ public interface DockerService {
     @GET("/images/json")
     Observable<List<DockerImage>> getImages(@Query("all") boolean all, @Query("dangling") boolean dangling);
 
+    @GET("/images/{id}/json")
+    Observable<DockerImage> getImage(@Path("id") String id);
+
     @GET("/containers/{id}/json")
     Observable<DockerContainerDetail> getContainer(@Path("id") String id);
-
-    @GET("/version")
-    Observable<DockerVersion> getVersion();
 }

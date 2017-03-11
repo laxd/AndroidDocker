@@ -13,12 +13,13 @@ import org.mockito.Mock;
 import java.io.IOException;
 
 import it.cosenonjaviste.daggermock.DaggerMockRule;
+import retrofit2.HttpException;
+import rx.Observable;
 import uk.laxd.androiddocker.activity.MainActivity;
 import uk.laxd.androiddocker.dao.DockerDao;
 import uk.laxd.androiddocker.domain.DockerServer;
 import uk.laxd.androiddocker.dto.DockerVersion;
 import uk.laxd.androiddocker.module.RetrofitModule;
-import uk.laxd.androiddocker.service.DockerConnectivityService;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -26,6 +27,7 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -57,15 +59,20 @@ public class SetupInstrumentedTest extends AbstractInstrumentedTestSetup {
 
     @Mock DockerDao dockerDao;
 
-    @Mock DockerConnectivityService dockerConnectivityService;
-
-
+    @Mock DockerVersionServiceFactory dockerVersionServiceFactory;
+    @Mock DockerVersionService dockerVersionService;
+    @Mock DockerVersionService invalidDockerVersionService;
     @Before
     public void setUp() throws Exception {
-        when(dockerConnectivityService.connect(INVALID_ADDRESS))
-                .thenThrow(new IOException("Invalid Address"));
-        when(dockerConnectivityService.connect(VALID_ADDRESS))
-                .thenReturn(new DockerVersion());
+        when(dockerVersionServiceFactory.getForAddress(INVALID_ADDRESS))
+                .thenReturn(invalidDockerVersionService);
+        when(dockerVersionServiceFactory.getForAddress(VALID_ADDRESS))
+                .thenReturn(dockerVersionService);
+        when(dockerVersionService.getVersion())
+                .thenReturn(Observable.just(new DockerVersion()));
+
+        doReturn(Observable.<DockerVersion>error(new IOException("Failed to connect")))
+                .when(invalidDockerVersionService).getVersion();
 
         String address = setupMockServer();
 
