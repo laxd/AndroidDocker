@@ -34,7 +34,7 @@ import uk.laxd.androiddocker.rx.AdapterSubscriber;
 /**
  * Created by lawrence on 04/01/17.
  */
-public class DockerContainersFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class DockerContainersFragment extends DockerDtoListFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private Unbinder unbinder;
 
@@ -104,22 +104,6 @@ public class DockerContainersFragment extends Fragment implements SwipeRefreshLa
         onRefresh();
     }
 
-    @OnItemClick(R.id.container_list)
-    public void onContainerClick(int position) {
-        Log.i("log", "Replacing content_frame with container");
-        DockerContainer dockerContainer = dockerContainerAdapter.getItem(position);
-
-        Bundle bundle = new Bundle();
-        bundle.putString("id", dockerContainer.getId());
-
-        FragmentTransaction tx = getFragmentManager().beginTransaction();
-        Fragment fragment = new DockerContainerFragment();
-        fragment.setArguments(bundle);
-        tx.replace(R.id.content_frame, fragment);
-        tx.addToBackStack(null);
-        tx.commit();
-    }
-
     @Override
     public void onRefresh() {
 
@@ -128,5 +112,15 @@ public class DockerContainersFragment extends Fragment implements SwipeRefreshLa
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new AdapterSubscriber<>(getContext(), dockerContainerAdapter, swipeRefreshLayout));
+    }
+
+    @Override
+    public Class<? extends Fragment> getFragmentClass() {
+        return DockerContainerFragment.class;
+    }
+
+    @Override
+    public ListView getListView() {
+        return listView;
     }
 }

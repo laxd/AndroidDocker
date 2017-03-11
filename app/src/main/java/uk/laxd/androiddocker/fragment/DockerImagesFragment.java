@@ -3,7 +3,9 @@ package uk.laxd.androiddocker.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnItemClick;
 import butterknife.Unbinder;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -27,6 +30,7 @@ import uk.laxd.androiddocker.DockerService;
 import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.adapter.DockerImagesListAdapter;
+import uk.laxd.androiddocker.dto.DockerContainer;
 import uk.laxd.androiddocker.dto.DockerImage;
 import uk.laxd.androiddocker.rx.AdapterSubscriber;
 
@@ -34,7 +38,7 @@ import uk.laxd.androiddocker.rx.AdapterSubscriber;
  * Created by lawrence on 04/01/17.
  */
 
-public class DockerImagesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class DockerImagesFragment extends DockerDtoListFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private Unbinder unbinder;
 
@@ -96,5 +100,15 @@ public class DockerImagesFragment extends Fragment implements SwipeRefreshLayout
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new AdapterSubscriber<>(getContext(), dockerImageAdapter, swipeRefreshLayout));
+    }
+
+    @Override
+    public Class<? extends Fragment> getFragmentClass() {
+        return DockerImageFragment.class;
+    }
+
+    @Override
+    public ListView getListView() {
+        return listView;
     }
 }
