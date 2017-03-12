@@ -44,7 +44,6 @@ public class SetupInstrumentedTest extends AbstractInstrumentedTestSetup {
     @Rule
     public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class, true, false);
 
-
     @Rule
     public DaggerMockRule<AndroidDockerComponent> daggerMockRule = new DaggerMockRule<>(AndroidDockerComponent.class, new RetrofitModule())
             .set(new DaggerMockRule.ComponentSetter<AndroidDockerComponent>() {

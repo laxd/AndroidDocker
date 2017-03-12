@@ -4,6 +4,8 @@ import com.orm.SugarApp;
 
 import javax.inject.Inject;
 
+import lombok.Getter;
+import lombok.Setter;
 import timber.log.Timber;
 import uk.laxd.androiddocker.dao.DockerDao;
 import uk.laxd.androiddocker.domain.DockerServer;
@@ -17,8 +19,11 @@ public class AndroidDockerApplication extends SugarApp {
     @Inject
     protected DockerDao dockerDao;
 
+    @Getter
     private String dockerAddress;
 
+    @Getter
+    @Setter
     private AndroidDockerComponent androidDockerComponent;
 
     @Override
@@ -41,21 +46,9 @@ public class AndroidDockerApplication extends SugarApp {
 
     }
 
-    public String getDockerAddress() {
-        return dockerAddress;
-    }
-
     public void updateDockerAddress(String dockerAddress) {
         dockerDao.setDockerAddress(dockerAddress);
 
         this.dockerAddress = dockerAddress;
-    }
-
-    public void setAndroidDockerComponent(AndroidDockerComponent androidDockerComponent) {
-        this.androidDockerComponent = androidDockerComponent;
-    }
-
-    public AndroidDockerComponent getAndroidDockerComponent() {
-        return androidDockerComponent;
     }
 }

@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -36,6 +38,8 @@ import uk.laxd.androiddocker.dto.PortMapping;
 
 public class DockerContainerFragment extends Fragment {
 
+    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     private Unbinder unbinder;
 
     @Inject
@@ -47,17 +51,23 @@ public class DockerContainerFragment extends Fragment {
     @BindView(R.id.container_name)
     protected TextView name;
 
+    @BindView(R.id.container_image)
+    protected TextView image;
+
+    @BindView(R.id.container_created_date)
+    protected TextView createdDate;
+
     @BindView(R.id.container_mounts)
     protected ViewGroup mountContainer;
+
+    @BindView(R.id.port_bindings)
+    protected ViewGroup portBindings;
 
     @BindView(R.id.gateway)
     protected TextView gateway;
 
     @BindView(R.id.ipaddress)
     protected TextView ipAddress;
-
-    @BindView(R.id.port_binding)
-    protected TextView portBinding;
 
     @Nullable
     @Override
@@ -92,20 +102,16 @@ public class DockerContainerFragment extends Fragment {
                     public void call(DockerContainerDetail dockerContainerDetail) {
                         id.setText(dockerContainerDetail.getId());
                         name.setText(dockerContainerDetail.getName());
-
-                        List<Mount> mounts = dockerContainerDetail.getMounts();
-
-                        // TODO: refactor this out?
-                        for(Mount mount : mounts) {
-                            View view = getLayoutInflater(getArguments()).inflate(R.layout.docker_container_mount_row, null);
+                        createdDate.setText(dateFormat.format(dockerContainerDetail.getCreatedDate()));
+                        image.setText(dockerContainerDetail.getDockerContainerConfig().getImage());
+                        for(Mount mount : dockerContainerDetail.getMounts()) {
+                            View view = getLayoutInflater(getArguments()).inflate(R.layout.docker_container_mount_row, mountContainer);
 
                             TextView source = (TextView) view.findViewById(R.id.mount_source);
                             TextView destination = (TextView) view.findViewById(R.id.mount_destination);
 
                             source.setText(mount.getSource());
                             destination.setText(mount.getDestination());
-
-                            mountContainer.addView(view);
                         }
 
                         NetworkSettings networkSettings = dockerContainerDetail.getNetworkSettings();
@@ -116,7 +122,7 @@ public class DockerContainerFragment extends Fragment {
 
                             if(networkSettings.getPorts() != null) {
                                 for(PortMapping portMapping : networkSettings.getPorts().getPortMappings()) {
-                                    View view = getLayoutInflater(getArguments()).inflate(R.layout.docker_container_port_mapping_row, null);
+                                    View view = getLayoutInflater(getArguments()).inflate(R.layout.docker_container_port_mapping_row, portBindings);
 
                                     TextView source = (TextView) view.findViewById(R.id.port_source);
                                     TextView destination = (TextView) view.findViewById(R.id.port_destination);
@@ -124,12 +130,6 @@ public class DockerContainerFragment extends Fragment {
                                     source.setText(portMapping.getSource());
                                     destination.setText(TextUtils.join(", ", portMapping.getDestinations()));
                                 }
-                            }
-
-                            if(networkSettings.getPorts() != null &&
-                                    networkSettings.getPorts().getPortMappings() != null &&
-                                    networkSettings.getPorts().getPortMappings().size() > 0) {
-                                portBinding.setText(networkSettings.getPorts().getPortMappings().get(0).getSource());
                             }
                         }
                     }

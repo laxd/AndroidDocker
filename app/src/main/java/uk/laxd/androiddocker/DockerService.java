@@ -9,6 +9,7 @@ import rx.Observable;
 import uk.laxd.androiddocker.dto.DockerContainer;
 import uk.laxd.androiddocker.dto.DockerContainerDetail;
 import uk.laxd.androiddocker.dto.DockerImage;
+import uk.laxd.androiddocker.dto.DockerImageDetail;
 import uk.laxd.androiddocker.dto.DockerVersion;
 
 /**
@@ -30,7 +31,7 @@ public interface DockerService {
     Observable<List<DockerImage>> getImages(@Query("all") boolean all, @Query("dangling") boolean dangling);
 
     @GET("/images/{id}/json")
-    Observable<DockerImage> getImage(@Path("id") String id);
+    Observable<DockerImageDetail> getImage(@Path("id") String id);
 
     @GET("/containers/{id}/json")
     Observable<DockerContainerDetail> getContainer(@Path("id") String id);

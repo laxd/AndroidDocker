@@ -3,6 +3,7 @@ package uk.laxd.androiddocker.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +20,7 @@ import rx.schedulers.Schedulers;
 import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.R;
-import uk.laxd.androiddocker.dto.DockerContainerDetail;
-import uk.laxd.androiddocker.dto.DockerImage;
+import uk.laxd.androiddocker.dto.DockerImageDetail;
 
 /**
  * Created by lawrence on 01/03/17.
@@ -36,8 +36,8 @@ public class DockerImageFragment extends Fragment {
     @BindView(R.id.image_id)
     protected TextView id;
 
-    @BindView(R.id.image_name)
-    protected TextView name;
+    @BindView(R.id.image_tags)
+    protected ViewGroup tags;
 
     @Nullable
     @Override
@@ -67,11 +67,17 @@ public class DockerImageFragment extends Fragment {
                 .getImage(getArguments().getString("id"))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<DockerImage>() {
-
+                .subscribe(new Action1<DockerImageDetail>() {
                     @Override
-                    public void call(DockerImage dockerImage) {
+                    public void call(DockerImageDetail dockerImage) {
                         id.setText(dockerImage.getId());
+
+                        for(String tag : dockerImage.getTags()) {
+                            View view = getLayoutInflater(getArguments()).inflate(R.layout.docker_image_tag, tags);
+
+                            TextView textView = (TextView) view.findViewById(R.id.image_tag);
+                            textView.setText(tag);
+                        }
                     }
                 });
     }

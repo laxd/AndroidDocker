@@ -13,4 +13,7 @@
     <string name="gateway">Gateway</string>
     <string name="ipaddress">IP Address</string>
     <string name="port_bindings">Port Bindings</string>
+    <string name="created_date">Created</string>
+    <string name="image_tags">Tags</string>
+    <string name="size">Size</string>
 </resources>

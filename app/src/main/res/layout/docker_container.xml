@@ -23,6 +23,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <TextView
+            android:labelFor="@+id/container_created_date"
+            android:text="@string/created_date"
+            style="@style/Label"/>
+        <TextView
+            android:id="@+id/container_created_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:labelFor="@+id/container_name"
@@ -73,14 +81,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+
         <TextView
-            android:labelFor="@+id/port_binding"
+            android:labelFor="@+id/port_bindings"
             android:text="@string/port_bindings"
             style="@style/Label"/>
-        <TextView
-            android:id="@+id/port_binding"
+        <LinearLayout
+            android:id="@+id/port_bindings"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>
