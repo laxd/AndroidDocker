@@ -34,6 +34,14 @@
             android:orientation="vertical">
         </LinearLayout>
 
+        <TextView
+            android:labelFor="@+id/image_size"
+            android:text="@string/size"
+            style="@style/Label"/>
+        <TextView
+            android:id="@+id/image_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 </LinearLayout>

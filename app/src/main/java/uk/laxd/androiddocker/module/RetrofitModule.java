@@ -8,6 +8,7 @@ import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.DockerVersionServiceFactory;
 import uk.laxd.androiddocker.dao.DockerDao;
 import uk.laxd.androiddocker.domain.DockerServer;
+import uk.laxd.bytesize.ByteSize;
 
 /**
  * Created by lawrence on 05/01/17.
@@ -39,5 +40,11 @@ public class RetrofitModule {
     @Singleton
     public DockerVersionServiceFactory provideDockerVersionServiceFactory() {
         return new DockerVersionServiceFactory();
+    }
+
+    @Provides
+    @Singleton
+    public ByteSize provideByteSize() {
+        return new ByteSize();
     }
 }

@@ -3,11 +3,12 @@ package uk.laxd.androiddocker.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.math.BigDecimal;
 
 import javax.inject.Inject;
 
@@ -21,6 +22,7 @@ import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.dto.DockerImageDetail;
+import uk.laxd.bytesize.ByteSize;
 
 /**
  * Created by lawrence on 01/03/17.
@@ -33,11 +35,17 @@ public class DockerImageFragment extends Fragment {
     @Inject
     protected DockerServiceFactory dockerServiceFactory;
 
+    @Inject
+    protected ByteSize byteSize;
+
     @BindView(R.id.image_id)
     protected TextView id;
 
     @BindView(R.id.image_tags)
     protected ViewGroup tags;
+
+    @BindView(R.id.image_size)
+    protected TextView size;
 
     @Nullable
     @Override
@@ -78,6 +86,8 @@ public class DockerImageFragment extends Fragment {
                             TextView textView = (TextView) view.findViewById(R.id.image_tag);
                             textView.setText(tag);
                         }
+
+                        size.setText(byteSize.getFormattedFileSize(new BigDecimal(dockerImage.getSize())));
                     }
                 });
     }
