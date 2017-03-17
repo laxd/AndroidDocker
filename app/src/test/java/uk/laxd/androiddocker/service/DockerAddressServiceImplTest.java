@@ -8,8 +8,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import rx.Observable;
-import uk.laxd.androiddocker.DockerService;
-import uk.laxd.androiddocker.DockerServiceFactory;
+import uk.laxd.androiddocker.DockerVersionService;
+import uk.laxd.androiddocker.DockerVersionServiceFactory;
 import uk.laxd.androiddocker.dao.DockerDao;
 import uk.laxd.androiddocker.dto.DockerVersion;
 
@@ -35,10 +35,10 @@ public class DockerAddressServiceImplTest {
     protected DockerDao dockerDao;
 
     @Mock
-    protected DockerServiceFactory dockerServiceFactory;
+    protected DockerVersionServiceFactory dockerServiceFactory;
 
     @Mock
-    private DockerService dockerService;
+    private DockerVersionService dockerService;
 
     @InjectMocks
     private DockerAddressService dockerAddressService = new DockerAddressServiceImpl();
@@ -46,8 +46,8 @@ public class DockerAddressServiceImplTest {
     @Before
     public void setUp() throws Exception {
         when(dockerDao.requiresSetup()).thenReturn(false);
-        when(dockerServiceFactory.createWithAddress(VALID_ADDRESS)).thenReturn(dockerService);
-        when(dockerServiceFactory.createWithAddress(INVALID_ADDRESS)).thenThrow(new IllegalArgumentException());
+        when(dockerServiceFactory.getForAddress(VALID_ADDRESS)).thenReturn(dockerService);
+        when(dockerServiceFactory.getForAddress(INVALID_ADDRESS)).thenThrow(new IllegalArgumentException());
     }
 
     @Test

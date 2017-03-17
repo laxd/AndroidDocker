@@ -2,7 +2,6 @@ package uk.laxd.androiddocker.service;
 
 import javax.inject.Inject;
 
-import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.DockerVersionServiceFactory;
 import uk.laxd.androiddocker.dao.DockerDao;
 
@@ -13,9 +12,6 @@ public class DockerAddressServiceImpl implements DockerAddressService {
 
     @Inject
     protected DockerDao dockerDao;
-
-    @Inject
-    protected DockerServiceFactory dockerServiceFactory;
 
     @Inject
     protected DockerVersionServiceFactory dockerVersionServiceFactory;
