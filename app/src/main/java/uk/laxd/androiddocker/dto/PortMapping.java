@@ -3,17 +3,24 @@ package uk.laxd.androiddocker.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * Created by lawrence on 26/01/17.
  */
-@Getter
-@Setter
 public class PortMapping {
 
     private String source;
 
-    private List<String> destinations = new ArrayList<>();
+    private final List<String> destinations = new ArrayList<>();
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public List<String> getDestinations() {
+        return destinations;
+    }
 }

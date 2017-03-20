@@ -1,26 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:id="@+id/port_source"
-        android:layout_width="0dp"
-        android:layout_weight="0.45"
-        android:layout_height="wrap_content" />
+    <data>
 
-    <ImageView
-        android:layout_width="0dp"
-        android:layout_weight="0.1"
+        <variable
+            name="port"
+            type="uk.laxd.androiddocker.dto.PortMapping" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@android:drawable/arrow_up_float"
-        android:rotation="90"/>
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/port_destination"
-        android:layout_width="0dp"
-        android:layout_weight="0.45"
-        android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/port_source"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.45"
+            android:text="@{port.source}"/>
 
-</LinearLayout>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:rotation="90"
+            android:text="-"/>
+
+        <TextView
+            android:id="@+id/port_destination"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.45"
+            android:text='@{(port.destinations.size() > 0) ? port.destinations.get(0) : ""}'/>
+
+    </LinearLayout>
+</layout>

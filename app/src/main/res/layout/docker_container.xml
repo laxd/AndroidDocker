@@ -1,97 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="container"
+            type="uk.laxd.androiddocker.dto.DockerContainerDetail"/>
+    </data>
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
 
-
         <TextView
+            style="@style/Label"
             android:labelFor="@+id/container_id"
-            android:text="@string/id"
-            style="@style/Label"/>
+            android:text="@string/id" />
+
         <TextView
             android:id="@+id/container_id"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@{container.id}"/>
 
         <TextView
+            style="@style/Label"
             android:labelFor="@+id/container_created_date"
-            android:text="@string/created_date"
-            style="@style/Label"/>
+            android:text="@string/created_date" />
+
         <TextView
             android:id="@+id/container_created_date"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@{container.createdDate.toString()}"/>
 
         <TextView
+            style="@style/Label"
             android:labelFor="@+id/container_name"
-            android:text="@string/name"
-            style="@style/Label"/>
+            android:text="@string/name" />
+
         <TextView
             android:id="@+id/container_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@{container.name}"/>
 
 
         <TextView
+            style="@style/Label"
             android:labelFor="@+id/container_image"
-            android:text="@string/image"
-            style="@style/Label"/>
+            android:text="@string/image" />
+
         <TextView
             android:id="@+id/container_image"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@{container.dockerContainerConfig.image}"/>
 
         <TextView
+            style="@style/Label"
             android:labelFor="@+id/container_mounts"
-            android:text="@string/mounts"
-            style="@style/Label"/>
+            android:text="@string/mounts" />
 
         <LinearLayout
             android:id="@+id/container_mounts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical"/>
 
         <TextView
+            style="@style/Label"
             android:labelFor="@+id/gateway"
-            android:text="@string/gateway"
-            style="@style/Label"/>
+            android:text="@string/gateway" />
+
         <TextView
             android:id="@+id/gateway"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@{container.networkSettings.gateway}"/>
 
 
         <TextView
+            style="@style/Label"
             android:labelFor="@+id/ipaddress"
-            android:text="@string/ipaddress"
-            style="@style/Label"/>
+            android:text="@string/ipaddress" />
+
         <TextView
             android:id="@+id/ipaddress"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@{container.networkSettings.ip}"/>
 
 
         <TextView
+            style="@style/Label"
             android:labelFor="@+id/port_bindings"
-            android:text="@string/port_bindings"
-            style="@style/Label"/>
+            android:text="@string/port_bindings" />
+
         <LinearLayout
             android:id="@+id/port_bindings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-        </LinearLayout>
-
+            android:orientation="vertical" />
     </LinearLayout>
-</LinearLayout>
+</layout>

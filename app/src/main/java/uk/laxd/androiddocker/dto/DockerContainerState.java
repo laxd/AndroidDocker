@@ -4,15 +4,12 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import timber.log.Timber;
 
 /**
  * Created by lawrence on 11/03/17.
  */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-@AllArgsConstructor
 public enum DockerContainerState {
 
     CREATED("created", android.R.color.holo_red_dark),
@@ -25,8 +22,12 @@ public enum DockerContainerState {
     private String stateName;
 
     @JsonIgnore
-    @Getter
     private int imageResource;
+
+    DockerContainerState(String stateName, int imageResource) {
+        this.stateName = stateName;
+        this.imageResource = imageResource;
+    }
 
     @JsonCreator
     public static DockerContainerState getState(String state) {
@@ -38,5 +39,9 @@ public enum DockerContainerState {
 
         Timber.w("Couldn't find state '%s', assuming 'exited' instead", state);
         return EXITED;
+    }
+
+    public int getImageResource() {
+        return imageResource;
     }
 }

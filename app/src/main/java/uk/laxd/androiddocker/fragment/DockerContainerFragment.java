@@ -1,5 +1,6 @@
 package uk.laxd.androiddocker.fragment;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -26,6 +27,9 @@ import rx.schedulers.Schedulers;
 import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.R;
+import uk.laxd.androiddocker.databinding.DockerContainerBinding;
+import uk.laxd.androiddocker.databinding.DockerContainerMountRowBinding;
+import uk.laxd.androiddocker.databinding.DockerContainerPortMappingRowBinding;
 import uk.laxd.androiddocker.dto.DockerContainerDetail;
 import uk.laxd.androiddocker.dto.DockerImageDetail;
 import uk.laxd.androiddocker.dto.Mount;
@@ -38,24 +42,13 @@ import uk.laxd.androiddocker.dto.PortMapping;
 
 public class DockerContainerFragment extends Fragment {
 
-    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
     private Unbinder unbinder;
 
     @Inject
     protected DockerServiceFactory dockerServiceFactory;
 
-    @BindView(R.id.container_id)
-    protected TextView id;
-
-    @BindView(R.id.container_name)
-    protected TextView name;
-
     @BindView(R.id.container_image)
     protected TextView image;
-
-    @BindView(R.id.container_created_date)
-    protected TextView createdDate;
 
     @BindView(R.id.container_mounts)
     protected ViewGroup mountContainer;
@@ -63,20 +56,22 @@ public class DockerContainerFragment extends Fragment {
     @BindView(R.id.port_bindings)
     protected ViewGroup portBindings;
 
-    @BindView(R.id.gateway)
-    protected TextView gateway;
-
-    @BindView(R.id.ipaddress)
-    protected TextView ipAddress;
+    private DockerContainerBinding binding;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.docker_container, container, false);
+
+        binding = DataBindingUtil.inflate(
+                inflater, R.layout.docker_container, container, false);
+
+        View root = binding.getRoot();
+
         unbinder = ButterKnife.bind(this, root);
 
         ((AndroidDockerApplication) getActivity().getApplication())
                 .getAndroidDockerComponent().inject(this);
+
 
         return root;
     }
@@ -126,35 +121,30 @@ public class DockerContainerFragment extends Fragment {
                 .subscribe(new Action1<DockerContainerDetail>() {
                     @Override
                     public void call(DockerContainerDetail dockerContainerDetail) {
-                        id.setText(dockerContainerDetail.getId());
-                        name.setText(dockerContainerDetail.getName());
-                        createdDate.setText(dateFormat.format(dockerContainerDetail.getCreatedDate()));
-                        image.setText(dockerContainerDetail.getDockerContainerConfig().getImage());
+
+                        binding.setContainer(dockerContainerDetail);
+
                         for(Mount mount : dockerContainerDetail.getMounts()) {
-                            View view = getLayoutInflater(getArguments()).inflate(R.layout.docker_container_mount_row, mountContainer);
+                            DockerContainerMountRowBinding mountRowBinding = DockerContainerMountRowBinding.inflate(
+                                    getLayoutInflater(getArguments()),
+                                    mountContainer,
+                                    true);
 
-                            TextView source = (TextView) view.findViewById(R.id.mount_source);
-                            TextView destination = (TextView) view.findViewById(R.id.mount_destination);
-
-                            source.setText(mount.getSource());
-                            destination.setText(mount.getDestination());
+                            mountRowBinding.setMount(mount);
                         }
 
                         NetworkSettings networkSettings = dockerContainerDetail.getNetworkSettings();
 
                         if(networkSettings != null) {
-                            gateway.setText(networkSettings.getGateway());
-                            ipAddress.setText(networkSettings.getIp());
-
                             if(networkSettings.getPorts() != null) {
                                 for(PortMapping portMapping : networkSettings.getPorts().getPortMappings()) {
-                                    View view = getLayoutInflater(getArguments()).inflate(R.layout.docker_container_port_mapping_row, portBindings);
 
-                                    TextView source = (TextView) view.findViewById(R.id.port_source);
-                                    TextView destination = (TextView) view.findViewById(R.id.port_destination);
+                                    DockerContainerPortMappingRowBinding portMappingRowBinding = DockerContainerPortMappingRowBinding.inflate(
+                                            getLayoutInflater(getArguments()),
+                                            portBindings,
+                                            true);
 
-                                    source.setText(portMapping.getSource());
-                                    destination.setText(TextUtils.join(", ", portMapping.getDestinations()));
+                                    portMappingRowBinding.setPort(portMapping);
                                 }
                             }
                         }
