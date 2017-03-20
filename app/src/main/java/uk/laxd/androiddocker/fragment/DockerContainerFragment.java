@@ -3,23 +3,22 @@ package uk.laxd.androiddocker.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.Layout;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -28,6 +27,7 @@ import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.dto.DockerContainerDetail;
+import uk.laxd.androiddocker.dto.DockerImageDetail;
 import uk.laxd.androiddocker.dto.Mount;
 import uk.laxd.androiddocker.dto.NetworkSettings;
 import uk.laxd.androiddocker.dto.PortMapping;
@@ -81,6 +81,32 @@ public class DockerContainerFragment extends Fragment {
         return root;
     }
 
+    @OnClick(R.id.container_image)
+    public void onImageClick() {
+        if(image != null && !TextUtils.isEmpty(image.getText())) {
+            String containerImage = image.getText().toString();
+
+            dockerServiceFactory.getDockerService()
+                    .getImage(containerImage)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<DockerImageDetail>() {
+                        @Override
+                        public void call(DockerImageDetail dockerImageDetail) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString("id", dockerImageDetail.getId());
+
+                            FragmentTransaction tx = getFragmentManager().beginTransaction();
+
+                            Fragment fragment = new DockerImageFragment();
+                            fragment.setArguments(bundle);
+                            tx.replace(R.id.content_frame, fragment);
+                            tx.addToBackStack(null);
+                            tx.commit();
+                        }
+                    });
+        }
+    }
 
     @Override
     public void onDestroy() {
