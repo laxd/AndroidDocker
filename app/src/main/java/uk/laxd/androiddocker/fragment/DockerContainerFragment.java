@@ -28,11 +28,9 @@ import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.databinding.DockerContainerBinding;
-import uk.laxd.androiddocker.databinding.DockerContainerMountRowBinding;
 import uk.laxd.androiddocker.databinding.DockerContainerPortMappingRowBinding;
 import uk.laxd.androiddocker.dto.DockerContainerDetail;
 import uk.laxd.androiddocker.dto.DockerImageDetail;
-import uk.laxd.androiddocker.dto.Mount;
 import uk.laxd.androiddocker.dto.NetworkSettings;
 import uk.laxd.androiddocker.dto.PortMapping;
 
@@ -50,20 +48,15 @@ public class DockerContainerFragment extends Fragment {
     @BindView(R.id.container_image)
     protected TextView image;
 
-    @BindView(R.id.container_mounts)
-    protected ViewGroup mountContainer;
-
-    @BindView(R.id.port_bindings)
-    protected ViewGroup portBindings;
-
     private DockerContainerBinding binding;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         binding = DataBindingUtil.inflate(
                 inflater, R.layout.docker_container, container, false);
+        binding.setContainer(new DockerContainerDetail());
+        binding.executePendingBindings();
 
         View root = binding.getRoot();
 
@@ -121,33 +114,7 @@ public class DockerContainerFragment extends Fragment {
                 .subscribe(new Action1<DockerContainerDetail>() {
                     @Override
                     public void call(DockerContainerDetail dockerContainerDetail) {
-
                         binding.setContainer(dockerContainerDetail);
-
-                        for(Mount mount : dockerContainerDetail.getMounts()) {
-                            DockerContainerMountRowBinding mountRowBinding = DockerContainerMountRowBinding.inflate(
-                                    getLayoutInflater(getArguments()),
-                                    mountContainer,
-                                    true);
-
-                            mountRowBinding.setMount(mount);
-                        }
-
-                        NetworkSettings networkSettings = dockerContainerDetail.getNetworkSettings();
-
-                        if(networkSettings != null) {
-                            if(networkSettings.getPorts() != null) {
-                                for(PortMapping portMapping : networkSettings.getPorts().getPortMappings()) {
-
-                                    DockerContainerPortMappingRowBinding portMappingRowBinding = DockerContainerPortMappingRowBinding.inflate(
-                                            getLayoutInflater(getArguments()),
-                                            portBindings,
-                                            true);
-
-                                    portMappingRowBinding.setPort(portMapping);
-                                }
-                            }
-                        }
                     }
                 });
     }

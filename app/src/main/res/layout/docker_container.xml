@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -66,11 +67,12 @@
             android:labelFor="@+id/container_mounts"
             android:text="@string/mounts" />
 
-        <LinearLayout
+        <ListView
             android:id="@+id/container_mounts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"/>
+            app:items="@{container.mounts}"
+            app:itemBinding="@{container.mountItemBinding}"/>
 
         <TextView
             style="@style/Label"
@@ -101,10 +103,11 @@
             android:labelFor="@+id/port_bindings"
             android:text="@string/port_bindings" />
 
-        <LinearLayout
+        <ListView
             android:id="@+id/port_bindings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            app:items="@{container.networkSettings.ports}"
+            app:itemBinding="@{container.networkSettings.portsItemBinding}"/>
     </LinearLayout>
 </layout>

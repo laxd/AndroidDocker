@@ -44,6 +44,7 @@ dependencies {
     compile "com.android.support:support-v13:$supportLibraryVersion"
 
     compile 'com.fasterxml.jackson.core:jackson-databind:2.3.2'
+    compile 'me.tatarka.bindingcollectionadapter2:bindingcollectionadapter:2.0.1'
     compile 'uk.laxd:bytesize:0.1'
 
     // Rx

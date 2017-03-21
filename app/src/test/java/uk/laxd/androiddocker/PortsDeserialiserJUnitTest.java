@@ -1,9 +1,5 @@
 package uk.laxd.androiddocker;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.json.ReaderBasedJsonParser;
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
@@ -11,12 +7,9 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-
 import uk.laxd.androiddocker.dto.DockerContainerDetail;
 import uk.laxd.androiddocker.dto.NetworkSettings;
 import uk.laxd.androiddocker.dto.PortMapping;
-import uk.laxd.androiddocker.dto.Ports;
 
 import static org.junit.Assert.*;
 
@@ -66,7 +59,7 @@ public class PortsDeserialiserJUnitTest {
 
         objectMapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
-        module.addDeserializer(Ports.class, portsDeserialiser);
+        module.addDeserializer(PortMapping[].class, portsDeserialiser);
         objectMapper.registerModule(module);
 
         dockerContainerDetailsJson = IOUtils.toString(this.getClass().getResourceAsStream("/docker_container_detail.json"), "UTF-8");
@@ -76,41 +69,41 @@ public class PortsDeserialiserJUnitTest {
     public void testSourceIsMapped() throws Exception {
         NetworkSettings networkSettings = objectMapper.readValue(SIMPLE_JSON_PORT_MAPPING, NetworkSettings.class);
 
-        assertEquals("9000/tcp", networkSettings.getPorts().getPortMappings().get(0).getSource());
+        assertEquals("9000/tcp", networkSettings.getPorts()[0].getSource());
     }
 
     @Test
     public void testCorrectNumberOfDestinationsReturned() throws Exception {
         NetworkSettings networkSettings = objectMapper.readValue(SIMPLE_JSON_PORT_MAPPING, NetworkSettings.class);
 
-        assertEquals(1, networkSettings.getPorts().getPortMappings().get(0).getDestinations().size());
+        assertEquals(1, networkSettings.getPorts()[0].getDestinations().size());
     }
 
     @Test
     public void testDestinationIsMapped() throws Exception {
         NetworkSettings networkSettings = objectMapper.readValue(SIMPLE_JSON_PORT_MAPPING, NetworkSettings.class);
 
-        assertEquals("0.0.0.0:9000", networkSettings.getPorts().getPortMappings().get(0).getDestinations().get(0));
+        assertEquals("0.0.0.0:9000", networkSettings.getPorts()[0].getDestinations().get(0));
     }
 
     @Test
     public void testComplexJsonSourcesAreMapped() throws Exception {
         NetworkSettings networkSettings = objectMapper.readValue(COMPEX_JSON_PORT_MAPPING, NetworkSettings.class);
 
-        assertEquals(2, networkSettings.getPorts().getPortMappings().size());
+        assertEquals(2, networkSettings.getPorts().length);
     }
 
     @Test
     public void test() throws Exception {
         NetworkSettings ns = objectMapper.readValue(SIMPLE_JSON_PORT_MAPPING, NetworkSettings.class);
 
-        assertEquals(1, ns.getPorts().getPortMappings().size());
+        assertEquals(1, ns.getPorts().length);
     }
 
     @Test
     public void testCompleteJsonMapping() throws Exception {
         DockerContainerDetail detail = objectMapper.readValue(dockerContainerDetailsJson, DockerContainerDetail.class);
 
-        assertEquals(2, detail.getNetworkSettings().getPorts().getPortMappings().size());
+        assertEquals(2, detail.getNetworkSettings().getPorts().length);
     }
 }

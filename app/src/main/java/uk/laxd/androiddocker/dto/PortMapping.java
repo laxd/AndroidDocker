@@ -1,5 +1,7 @@
 package uk.laxd.androiddocker.dto;
 
+import android.text.TextUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,5 +24,9 @@ public class PortMapping {
 
     public List<String> getDestinations() {
         return destinations;
+    }
+
+    public String getDestination() {
+        return TextUtils.join(", ", destinations);
     }
 }

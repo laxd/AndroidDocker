@@ -1,5 +1,7 @@
 package uk.laxd.androiddocker.dto;
 
+import android.databinding.BaseObservable;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -7,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Created by lawrence on 04/01/17.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public abstract class DockerDto {
+public abstract class DockerDto extends BaseObservable {
 
     @JsonProperty("Id")
     private String id;

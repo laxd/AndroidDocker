@@ -1,34 +1,34 @@
 package uk.laxd.androiddocker;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import uk.laxd.androiddocker.dto.PortMapping;
-import uk.laxd.androiddocker.dto.Ports;
 
 /**
  * Created by lawrence on 26/01/17.
  */
 
-public class PortsDeserialiser extends StdDeserializer<Ports> {
+public class PortsDeserialiser extends StdDeserializer<PortMapping[]> {
 
     public static final String IP_ADDRESS_KEY = "HostIp";
     public static final String PORT_KEY = "HostPort";
     public static final String PORTS_KEY = "Ports";
 
     protected PortsDeserialiser() {
-        super(Ports.class);
+        super(PortMapping[].class);
     }
 
     @Override
-    public Ports deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+    public PortMapping[] deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         TreeNode ports = p.readValueAsTree();
 
         if(ports == null) {
@@ -37,7 +37,7 @@ public class PortsDeserialiser extends StdDeserializer<Ports> {
 
         Iterator<String> iterator = ports.fieldNames();
 
-        Ports results = new Ports();
+        List<PortMapping> portMappings = new ArrayList<>();
 
         while(iterator.hasNext()) {
             PortMapping portMapping = new PortMapping();
@@ -56,9 +56,9 @@ public class PortsDeserialiser extends StdDeserializer<Ports> {
                 portMapping.getDestinations().add(destinationIp.asText() + ":" + destinationPort.asText());
             }
 
-            results.getPortMappings().add(portMapping);
+            portMappings.add(portMapping);
         }
 
-        return results;
+        return portMappings.toArray(new PortMapping[0]);
     }
 }
