@@ -1,19 +1,32 @@
 package uk.laxd.androiddocker.adapter;
 
+import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+
+import uk.laxd.androiddocker.R;
 
 /**
  * Created by lawrence on 13/01/17.
  */
 
-public class AbstractViewHolder {
-    private View baseView;
+public abstract class AbstractViewHolder<T> {
 
-    public AbstractViewHolder(View baseView) {
-        this.baseView = baseView;
+    protected LayoutInflater layoutInflater;
+    private ViewDataBinding binding;
+
+    public AbstractViewHolder(Context context, int layout, ViewGroup parent) {
+        this.layoutInflater = LayoutInflater.from(context);
+
+        binding = DataBindingUtil.inflate(layoutInflater, layout, parent, false);
     }
 
-    public View getBaseView() {
-        return baseView;
+    public View bindView(int variableId, T t) {
+        binding.setVariable(variableId, t);
+
+        return binding.getRoot();
     }
 }

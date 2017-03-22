@@ -3,6 +3,7 @@ package uk.laxd.androiddocker.adapter;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import java.util.List;
@@ -36,14 +37,10 @@ public abstract class ViewHolderArrayAdapter<T, H extends AbstractViewHolder> ex
         super(context, resource, textViewResourceId, objects);
     }
 
-
-    public H createOrRestoreViewHolder(View view, int layoutId) {
+    public H createOrRestoreViewHolder(ViewGroup parent, View view) {
         H holder;
         if(view == null) {
-            LayoutInflater inf = LayoutInflater.from(getContext());
-            view = inf.inflate(layoutId, null);
-            holder = createNewHolder(view);
-            view.setTag(holder);
+            holder = createNewHolder(parent);
         }
         else {
             holder = (H) view.getTag();
@@ -52,5 +49,5 @@ public abstract class ViewHolderArrayAdapter<T, H extends AbstractViewHolder> ex
         return holder;
     }
 
-    public abstract H createNewHolder(View view);
+    public abstract H createNewHolder(ViewGroup parent);
 }

@@ -38,7 +38,7 @@ import static org.mockito.Mockito.*;
 public class NavigationInstrumentedTest extends AbstractInstrumentedTestSetup {
 
     private static final String SETUP_GUIDE = "Setup Guide";
-    private static final String CONTAINER_NAME = "test_mysql";
+    private static final String CONTAINER_NAME = "/test_mysql";
     private static final String MENU_ITEM_IMAGES = "Images";
 
     @Rule

@@ -45,7 +45,7 @@ public class NetworkSettings {
     }
 
     public List<PortMapping> getPorts() {
-        return Arrays.asList(ports);
+        return ports == null ? null : Arrays.asList(ports);
     }
 
     public void setPorts(PortMapping[] ports) {

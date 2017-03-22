@@ -1,8 +1,10 @@
 package uk.laxd.androiddocker.adapter;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -11,7 +13,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import uk.laxd.androiddocker.BR;
 import uk.laxd.androiddocker.R;
+import uk.laxd.androiddocker.databinding.DockerImageListRowBinding;
 import uk.laxd.androiddocker.dto.DockerImage;
 
 /**
@@ -27,34 +31,28 @@ public class DockerImagesListAdapter extends ViewHolderArrayAdapter<DockerImage,
         super(context, resource, objects);
     }
 
+    @Override
+    public ViewHolder createNewHolder(ViewGroup parent) {
+        return new ViewHolder(parent);
+    }
+
     @NonNull
     @Override
     public View getView(int position, View view, ViewGroup parent) {
-        ViewHolder viewHolder = createOrRestoreViewHolder(view, R.layout.docker_image_list_row);
+        ViewHolder holder = createOrRestoreViewHolder(parent, view);
 
         DockerImage dockerImage = getItem(position);
 
-        if(dockerImage != null) {
-            if(dockerImage.getRepoTags() != null) {
-                viewHolder.imageName.setText(TextUtils.join(",", dockerImage.getRepoTags()));
-            }
-        }
+        View boundView = holder.bindView(BR.image, dockerImage);
 
-        return viewHolder.getBaseView();
+        boundView.setTag(holder);
+
+        return boundView;
     }
 
-    @Override
-    public ViewHolder createNewHolder(View view) {
-        return new ViewHolder(view);
-    }
-
-    public class ViewHolder extends AbstractViewHolder {
-        @BindView(R.id.image_name)
-        TextView imageName;
-
-        public ViewHolder(View view) {
-            super(view);
-            ButterKnife.bind(this, view);
+    public class ViewHolder extends AbstractViewHolder<DockerImage> {
+        public ViewHolder(ViewGroup parent) {
+            super(getContext(), R.layout.docker_image_list_row, parent);
         }
     }
 }
