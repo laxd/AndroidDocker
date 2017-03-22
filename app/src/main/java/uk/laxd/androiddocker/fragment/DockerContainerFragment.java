@@ -28,11 +28,8 @@ import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.databinding.DockerContainerBinding;
-import uk.laxd.androiddocker.databinding.DockerContainerPortMappingRowBinding;
 import uk.laxd.androiddocker.dto.DockerContainerDetail;
 import uk.laxd.androiddocker.dto.DockerImageDetail;
-import uk.laxd.androiddocker.dto.NetworkSettings;
-import uk.laxd.androiddocker.dto.PortMapping;
 
 /**
  * Created by lawrence on 05/01/17.
