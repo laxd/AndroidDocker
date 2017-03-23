@@ -69,41 +69,41 @@ public class PortsDeserialiserJUnitTest {
     public void testSourceIsMapped() throws Exception {
         NetworkSettings networkSettings = objectMapper.readValue(SIMPLE_JSON_PORT_MAPPING, NetworkSettings.class);
 
-        assertEquals("9000/tcp", networkSettings.getPorts()[0].getSource());
+        assertEquals("9000/tcp", networkSettings.getPorts().get(0).getSource());
     }
 
     @Test
     public void testCorrectNumberOfDestinationsReturned() throws Exception {
         NetworkSettings networkSettings = objectMapper.readValue(SIMPLE_JSON_PORT_MAPPING, NetworkSettings.class);
 
-        assertEquals(1, networkSettings.getPorts()[0].getDestinations().size());
+        assertEquals(1, networkSettings.getPorts().get(0).getDestinations().size());
     }
 
     @Test
     public void testDestinationIsMapped() throws Exception {
         NetworkSettings networkSettings = objectMapper.readValue(SIMPLE_JSON_PORT_MAPPING, NetworkSettings.class);
 
-        assertEquals("0.0.0.0:9000", networkSettings.getPorts()[0].getDestinations().get(0));
+        assertEquals("0.0.0.0:9000", networkSettings.getPorts().get(0).getDestinations().get(0));
     }
 
     @Test
     public void testComplexJsonSourcesAreMapped() throws Exception {
         NetworkSettings networkSettings = objectMapper.readValue(COMPEX_JSON_PORT_MAPPING, NetworkSettings.class);
 
-        assertEquals(2, networkSettings.getPorts().length);
+        assertEquals(2, networkSettings.getPorts().size());
     }
 
     @Test
     public void test() throws Exception {
         NetworkSettings ns = objectMapper.readValue(SIMPLE_JSON_PORT_MAPPING, NetworkSettings.class);
 
-        assertEquals(1, ns.getPorts().length);
+        assertEquals(1, ns.getPorts().size());
     }
 
     @Test
     public void testCompleteJsonMapping() throws Exception {
         DockerContainerDetail detail = objectMapper.readValue(dockerContainerDetailsJson, DockerContainerDetail.class);
 
-        assertEquals(2, detail.getNetworkSettings().getPorts().length);
+        assertEquals(2, detail.getNetworkSettings().getPorts().size());
     }
 }

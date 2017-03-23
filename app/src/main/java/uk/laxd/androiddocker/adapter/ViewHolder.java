@@ -7,25 +7,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import uk.laxd.androiddocker.R;
-
 /**
  * Created by lawrence on 13/01/17.
  */
 
-public abstract class AbstractViewHolder<T> {
+public abstract class ViewHolder<T> {
 
+    private int variableId;
     protected LayoutInflater layoutInflater;
     private ViewDataBinding binding;
 
-    public AbstractViewHolder(Context context, int layout, ViewGroup parent) {
+    public ViewHolder(Context context, int layout, ViewGroup parent, int variableId) {
         this.layoutInflater = LayoutInflater.from(context);
 
         binding = DataBindingUtil.inflate(layoutInflater, layout, parent, false);
+
+        this.variableId = variableId;
     }
 
-    public View bindView(int variableId, T t) {
+    public View bindView(T t) {
         binding.setVariable(variableId, t);
+        binding.executePendingBindings();
 
         return binding.getRoot();
     }
