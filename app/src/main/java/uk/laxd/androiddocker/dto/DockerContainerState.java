@@ -37,7 +37,7 @@ public enum DockerContainerState {
             }
         }
 
-        Timber.w("Couldn't find state '%s', assuming 'exited' instead", state);
+        Timber.w("Couldn't find state '%s', assuming '%s' instead", state, EXITED);
         return EXITED;
     }
 
