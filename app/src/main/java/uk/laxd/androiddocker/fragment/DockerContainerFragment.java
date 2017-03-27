@@ -1,5 +1,6 @@
 package uk.laxd.androiddocker.fragment;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -27,6 +28,7 @@ import rx.schedulers.Schedulers;
 import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.R;
+import uk.laxd.androiddocker.activity.DockerImageActivity;
 import uk.laxd.androiddocker.databinding.DockerContainerBinding;
 import uk.laxd.androiddocker.dto.DockerContainerDetail;
 import uk.laxd.androiddocker.dto.DockerImageDetail;
@@ -71,25 +73,10 @@ public class DockerContainerFragment extends Fragment {
         if(image != null && !TextUtils.isEmpty(image.getText())) {
             String containerImage = image.getText().toString();
 
-            dockerServiceFactory.getDockerService()
-                    .getImage(containerImage)
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<DockerImageDetail>() {
-                        @Override
-                        public void call(DockerImageDetail dockerImageDetail) {
-                            Bundle bundle = new Bundle();
-                            bundle.putString("id", dockerImageDetail.getId());
+            Intent intent = new Intent(getActivity(), DockerImageActivity.class);
+            intent.putExtra("id", containerImage);
 
-                            FragmentTransaction tx = getFragmentManager().beginTransaction();
-
-                            Fragment fragment = new DockerImageFragment();
-                            fragment.setArguments(bundle);
-                            tx.replace(R.id.content_frame, fragment);
-                            tx.addToBackStack(null);
-                            tx.commit();
-                        }
-                    });
+            startActivity(intent);
         }
     }
 

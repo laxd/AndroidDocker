@@ -1,11 +1,10 @@
 package uk.laxd.androiddocker.fragment;
 
+import android.app.Activity;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +26,7 @@ import timber.log.Timber;
 import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.R;
+import uk.laxd.androiddocker.activity.DockerContainerActivity;
 import uk.laxd.androiddocker.adapter.DockerContainerListAdapter;
 import uk.laxd.androiddocker.dao.DockerDao;
 import uk.laxd.androiddocker.dto.DockerContainer;
@@ -35,14 +35,11 @@ import uk.laxd.androiddocker.rx.AdapterSubscriber;
 /**
  * Created by lawrence on 04/01/17.
  */
-public class DockerContainersFragment extends DockerDtoListFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class DockerContainersFragment extends DockerDtoListFragment {
 
     private Unbinder unbinder;
 
     private DockerContainerListAdapter dockerContainerAdapter;
-
-    @BindView(R.id.refresh_layout)
-    protected SwipeRefreshLayout swipeRefreshLayout;
 
     @BindView(R.id.container_list)
     protected ListView listView;
@@ -99,25 +96,20 @@ public class DockerContainersFragment extends DockerDtoListFragment implements S
         dockerContainerAdapter = new DockerContainerListAdapter(getActivity(), R.layout.docker_container_list_row, new ArrayList<DockerContainer>());
         listView.setAdapter(dockerContainerAdapter);
 
-        swipeRefreshLayout.setOnRefreshListener(this);
-
-        swipeRefreshLayout.setRefreshing(true);
         onRefresh();
     }
 
     @Override
-    public void onRefresh() {
+    public Class<? extends Activity> getActivityClass() {
+        return DockerContainerActivity.class;
+    }
 
+    public void onRefresh() {
         sub = dockerServiceFactory.getDockerService()
                 .getContainers()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new AdapterSubscriber<>(getContext(), dockerContainerAdapter, swipeRefreshLayout));
-    }
-
-    @Override
-    public Class<? extends Fragment> getFragmentClass() {
-        return DockerContainerFragment.class;
+                .subscribe(new AdapterSubscriber<>(getContext(), dockerContainerAdapter));
     }
 
     @Override

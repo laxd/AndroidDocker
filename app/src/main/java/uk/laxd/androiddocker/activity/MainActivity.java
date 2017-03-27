@@ -1,24 +1,31 @@
 package uk.laxd.androiddocker.activity;
 
 import android.content.Intent;
-import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
+import android.os.Bundle;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ListView;
+import android.support.design.widget.TabLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnItemClick;
-import timber.log.Timber;
 import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.dao.DockerDao;
@@ -28,25 +35,77 @@ import uk.laxd.androiddocker.fragment.SetupFragment;
 
 public class MainActivity extends AppCompatActivity {
 
+    static final int SETUP_REQUEST = 1;
+
     @Inject
     protected DockerDao dockerDao;
 
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
 
-    @BindView(R.id.drawer_layout)
-    protected DrawerLayout drawer;
+    @BindView(R.id.viewpager)
+    protected ViewPager viewPager;
 
-    @BindView(R.id.left_drawer)
-    protected ListView navList;
+    @BindView(R.id.tabs)
+    protected TabLayout tabs;
+
+    @BindView(R.id.nav_view)
+    protected NavigationView navigationView;
+
+    @BindView(R.id.drawer)
+    protected DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-
         ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
+
+        Adapter adapter = new Adapter(getSupportFragmentManager());
+
+        adapter.addFragment(new DockerContainersFragment(), "Containers");
+        adapter.addFragment(new DockerImagesFragment(), "Images");
+
+        viewPager.setAdapter(adapter);
+
+        for(String tab : adapter.fragmentTitles) {
+            tabs.addTab(tabs.newTab().setText(tab));
+        }
+
+        tabs.setupWithViewPager(viewPager);
+
+        // Adding menu icon to Toolbar
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_view);
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        // Set behavior of Navigation drawer
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    // This method will trigger on item Click of navigation menu
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                        // Set item in checked state
+                        menuItem.setChecked(true);
+
+                        switch (menuItem.getItemId()) {
+                            case R.id.setup_guide:
+                                Intent intent = new Intent(MainActivity.this, SetupActivity.class);
+
+                                startActivityForResult(intent, SETUP_REQUEST);
+                        }
+
+                        // Closing drawer on item click
+                        drawerLayout.closeDrawers();
+                        return true;
+                    }
+                });
+
 
         ((AndroidDockerApplication) getApplication())
                 .getAndroidDockerComponent()
@@ -54,58 +113,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @OnItemClick(R.id.left_drawer)
-    protected void clickDrawerItem(int pos) {
-        Fragment fragment;
-
-        switch (pos) {
-            case 0:
-                fragment = new DockerContainersFragment();
-                break;
-            case 1:
-                fragment = new DockerImagesFragment();
-                break;
-            case 2:
-                fragment = new SetupFragment();
-                break;
-            default:
-                throw new IllegalStateException("Invalid drawer position: '" + pos + "'");
-        }
-
-        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-        tx.replace(R.id.content_frame, fragment);
-        tx.commit();
-
-        drawer.closeDrawer(navList);
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        Fragment fragment;
-
-        if(dockerDao.requiresSetup()) {
-            Timber.i("Docker address not setup yet, redirecting to SetupFragment");
-
-            fragment = new SetupFragment();
-        }
-        else {
-            Timber.i("Using '%s' as address.", dockerDao.getDockerAddress().getAddress());
-
-            fragment = new DockerContainersFragment();
-        }
-
-        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-        tx.replace(R.id.content_frame, fragment);
-        tx.commit();
-
-        setSupportActionBar(toolbar);
     }
 
     @Override
@@ -121,13 +131,59 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.setup_guide:
-                FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-                tx.replace(R.id.content_frame, new SetupFragment());
-                tx.commit();
+                Intent intent = new Intent(this, SetupActivity.class);
 
+                startActivityForResult(intent, SETUP_REQUEST);
+
+                return true;
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case SETUP_REQUEST:
+                if(resultCode == RESULT_OK) {
+                    // Refresh data
+                }
+                else {
+                    //Do nothing
+                }
+        }
+    }
+
+    public class Adapter extends FragmentPagerAdapter {
+
+        private final List<Fragment> fragments = new ArrayList<>();
+        private final List<String> fragmentTitles = new ArrayList<>();
+
+        public Adapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return fragments.size();
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            fragments.add(fragment);
+            fragmentTitles.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return fragmentTitles.get(position);
+        }
     }
 }

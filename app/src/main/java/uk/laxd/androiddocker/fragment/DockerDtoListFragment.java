@@ -1,15 +1,13 @@
 package uk.laxd.androiddocker.fragment;
 
-import android.os.Bundle;
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import timber.log.Timber;
-import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.dto.DockerDto;
 
 /**
@@ -28,24 +26,15 @@ public abstract class DockerDtoListFragment extends Fragment {
                 Timber.i("Replacing content_frame with container");
                 DockerDto dockerDto = (DockerDto) getListView().getAdapter().getItem(position);
 
-                Bundle bundle = new Bundle();
-                bundle.putString("id", dockerDto.getId());
+                Intent intent = new Intent(getActivity(), getActivityClass());
 
-                FragmentTransaction tx = getFragmentManager().beginTransaction();
+                intent.putExtra("id", dockerDto.getId());
 
-                try {
-                    Fragment fragment = getFragmentClass().newInstance();
-                    fragment.setArguments(bundle);
-                    tx.replace(R.id.content_frame, fragment);
-                    tx.addToBackStack(null);
-                    tx.commit();
-                } catch (Exception e) {
-                    throw new RuntimeException(String.format("Invalid fragment class: %s", getFragmentClass()), e);
-                }
+                startActivity(intent);
             }
         });
     }
 
-    public abstract Class<? extends Fragment> getFragmentClass();
+    public abstract Class<? extends Activity> getActivityClass();
     public abstract ListView getListView();
 }

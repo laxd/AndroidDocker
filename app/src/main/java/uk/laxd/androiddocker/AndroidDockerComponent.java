@@ -3,6 +3,7 @@ package uk.laxd.androiddocker;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import uk.laxd.androiddocker.activity.SetupActivity;
 import uk.laxd.androiddocker.fragment.DockerContainerFragment;
 import uk.laxd.androiddocker.fragment.DockerContainersFragment;
 import uk.laxd.androiddocker.fragment.DockerImageFragment;
@@ -18,6 +19,8 @@ import uk.laxd.androiddocker.module.RetrofitModule;
 @Component(modules = {RetrofitModule.class})
 public interface AndroidDockerComponent {
     void inject(MainActivity dockerImagesActivity);
+    void inject(SetupActivity setupActivity);
+
     void inject(DockerImagesFragment dockerImagesFragment);
     void inject(DockerContainersFragment dockerContainersActivity);
     void inject(DockerContainerFragment dockerContainerFragment);

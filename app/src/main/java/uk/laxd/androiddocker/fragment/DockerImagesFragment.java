@@ -1,5 +1,6 @@
 package uk.laxd.androiddocker.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -29,6 +30,7 @@ import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.DockerService;
 import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.R;
+import uk.laxd.androiddocker.activity.DockerImageActivity;
 import uk.laxd.androiddocker.adapter.DockerImagesListAdapter;
 import uk.laxd.androiddocker.dto.DockerContainer;
 import uk.laxd.androiddocker.dto.DockerImage;
@@ -38,7 +40,7 @@ import uk.laxd.androiddocker.rx.AdapterSubscriber;
  * Created by lawrence on 04/01/17.
  */
 
-public class DockerImagesFragment extends DockerDtoListFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class DockerImagesFragment extends DockerDtoListFragment {
 
     private Unbinder unbinder;
 
@@ -49,9 +51,6 @@ public class DockerImagesFragment extends DockerDtoListFragment implements Swipe
 
     @BindView(R.id.image_list)
     protected ListView listView;
-
-    @BindView(R.id.refresh_layout)
-    protected SwipeRefreshLayout swipeRefreshLayout;
 
     private ArrayAdapter<DockerImage> dockerImageAdapter;
 
@@ -89,22 +88,19 @@ public class DockerImagesFragment extends DockerDtoListFragment implements Swipe
         dockerImageAdapter = new DockerImagesListAdapter(getActivity(), R.layout.docker_image_list_row, new ArrayList<DockerImage>());
         listView.setAdapter(dockerImageAdapter);
 
-        swipeRefreshLayout.setOnRefreshListener(this);
-
         onRefresh();
     }
 
-    @Override
     public void onRefresh() {
         dockerService.getImages(true, false)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new AdapterSubscriber<>(getContext(), dockerImageAdapter, swipeRefreshLayout));
+                .subscribe(new AdapterSubscriber<>(getContext(), dockerImageAdapter));
     }
 
     @Override
-    public Class<? extends Fragment> getFragmentClass() {
-        return DockerImageFragment.class;
+    public Class<? extends Activity> getActivityClass() {
+        return DockerImageActivity.class;
     }
 
     @Override
