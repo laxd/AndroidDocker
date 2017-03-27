@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import uk.laxd.androiddocker.AndroidDockerApplication;
+import uk.laxd.androiddocker.DockerVersionServiceFactory;
 import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.dao.DockerDao;
 import uk.laxd.androiddocker.fragment.DockerContainersFragment;
@@ -61,6 +62,17 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        ((AndroidDockerApplication) getApplication())
+                .getAndroidDockerComponent()
+                .inject(this);
+
+        if(dockerDao.requiresSetup()) {
+            // Redirect to setup
+            Intent intent = new Intent(this, SetupActivity.class);
+
+            startActivity(intent);
+        }
 
         setSupportActionBar(toolbar);
 
@@ -105,12 +117,6 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     }
                 });
-
-
-        ((AndroidDockerApplication) getApplication())
-                .getAndroidDockerComponent()
-                .inject(this);
-
     }
 
     @Override

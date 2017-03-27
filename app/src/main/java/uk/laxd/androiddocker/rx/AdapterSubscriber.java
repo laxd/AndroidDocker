@@ -9,6 +9,7 @@ import android.widget.Toast;
 import java.util.Collection;
 
 import rx.Subscriber;
+import timber.log.Timber;
 
 /**
  * Created by lawrence on 19/01/17.
@@ -60,6 +61,8 @@ public class AdapterSubscriber<T> extends Subscriber<Collection<T>> {
 
     @Override
     public void onError(Throwable e) {
+        Timber.e("Error when trying to contact docker:", e);
+
         Toast.makeText(context,
                 "Failed to connect to docker address",
                 Toast.LENGTH_LONG)

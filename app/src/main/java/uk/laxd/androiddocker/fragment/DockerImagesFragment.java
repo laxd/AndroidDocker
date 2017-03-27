@@ -24,6 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 import butterknife.Unbinder;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import uk.laxd.androiddocker.AndroidDockerApplication;
@@ -52,7 +53,12 @@ public class DockerImagesFragment extends DockerDtoListFragment {
     @BindView(R.id.image_list)
     protected ListView listView;
 
+    @BindView(R.id.refresh_layout)
+    protected SwipeRefreshLayout swipeRefreshLayout;
+
     private ArrayAdapter<DockerImage> dockerImageAdapter;
+
+    private Subscription sub;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,6 +85,10 @@ public class DockerImagesFragment extends DockerDtoListFragment {
     public void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
+
+        if(sub != null) {
+            sub.unsubscribe();
+        }
     }
 
     @Override
@@ -88,14 +98,22 @@ public class DockerImagesFragment extends DockerDtoListFragment {
         dockerImageAdapter = new DockerImagesListAdapter(getActivity(), R.layout.docker_image_list_row, new ArrayList<DockerImage>());
         listView.setAdapter(dockerImageAdapter);
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                DockerImagesFragment.this.onRefresh();
+            }
+        });
+
         onRefresh();
     }
 
     public void onRefresh() {
-        dockerService.getImages(true, false)
+        sub = dockerServiceFactory.getDockerService()
+                .getImages(true, false)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new AdapterSubscriber<>(getContext(), dockerImageAdapter));
+                .subscribe(new AdapterSubscriber<>(getContext(), dockerImageAdapter, swipeRefreshLayout));
     }
 
     @Override

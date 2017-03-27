@@ -47,6 +47,9 @@ public class DockerContainersFragment extends DockerDtoListFragment {
     @BindView(R.id.empty_list)
     protected TextView textView;
 
+    @BindView(R.id.refresh_layout)
+    protected SwipeRefreshLayout swipeRefreshLayout;
+
     @Inject
     protected DockerServiceFactory dockerServiceFactory;
 
@@ -96,6 +99,13 @@ public class DockerContainersFragment extends DockerDtoListFragment {
         dockerContainerAdapter = new DockerContainerListAdapter(getActivity(), R.layout.docker_container_list_row, new ArrayList<DockerContainer>());
         listView.setAdapter(dockerContainerAdapter);
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                DockerContainersFragment.this.onRefresh();
+            }
+        });
+
         onRefresh();
     }
 
@@ -109,7 +119,7 @@ public class DockerContainersFragment extends DockerDtoListFragment {
                 .getContainers()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new AdapterSubscriber<>(getContext(), dockerContainerAdapter));
+                .subscribe(new AdapterSubscriber<>(getContext(), dockerContainerAdapter, swipeRefreshLayout));
     }
 
     @Override
