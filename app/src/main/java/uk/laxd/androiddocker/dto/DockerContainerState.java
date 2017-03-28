@@ -12,27 +12,27 @@ import timber.log.Timber;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum DockerContainerState {
 
-    CREATED("created", android.R.color.holo_red_dark),
-    RESTARTING("restarting", android.R.color.holo_orange_dark),
-    RUNNING("running", android.R.color.holo_green_dark),
-    PAUSED("paused", android.R.color.holo_orange_dark),
-    EXITED("exited", android.R.color.holo_red_dark),
-    DEAD("dead", android.R.color.holo_red_dark);
+    CREATED("Created", android.R.color.holo_red_dark),
+    RESTARTING("Restarting", android.R.color.holo_orange_dark),
+    RUNNING("Running", android.R.color.holo_green_dark),
+    PAUSED("Paused", android.R.color.holo_orange_dark),
+    EXITED("Exited", android.R.color.holo_red_dark),
+    DEAD("Dead", android.R.color.holo_red_dark);
 
-    private String stateName;
+    private String name;
 
     @JsonIgnore
     private int imageResource;
 
-    DockerContainerState(String stateName, int imageResource) {
-        this.stateName = stateName;
+    DockerContainerState(String name, int imageResource) {
+        this.name = name;
         this.imageResource = imageResource;
     }
 
     @JsonCreator
     public static DockerContainerState getState(String state) {
         for (DockerContainerState containerState : values()) {
-            if (containerState.stateName.equals(state)) {
+            if (containerState.name.toUpperCase().equals(state.toUpperCase())) {
                 return containerState;
             }
         }
@@ -43,5 +43,9 @@ public enum DockerContainerState {
 
     public int getImageResource() {
         return imageResource;
+    }
+
+    public String getName() {
+        return name;
     }
 }
