@@ -1,79 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="?android:attr/selectableItemBackground">
     <data>
         <variable
             name="container"
-            type="uk.laxd.androiddocker.dto.DockerContainer"/>
+            type="uk.laxd.androiddocker.dto.DockerContainer" />
     </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:orientation="horizontal">
+        android:layout_height="44dp"
+        android:orientation="horizontal"
+        android:padding="2dp">
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight=".8"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="20dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight=".2"
-                    android:labelFor="@+id/container_name"
-                    android:text="@string/name"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/container_name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".8"
-                    android:ellipsize="end"
-                    android:text="@{container.names[0]}"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="20dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight=".2"
-                    android:layout_marginEnd="3dp"
-                    android:labelFor="@+id/container_image"
-                    android:text="@string/image"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/container_image"
-                    android:layout_width="0dp"
-                    android:layout_weight=".8"
-                    android:layout_height="match_parent"
-                    android:ellipsize="end"
-                    android:text="@{container.image}"/>
-
-            </LinearLayout>
-        </LinearLayout>
 
         <TextView
             android:id="@+id/container_status"
-            android:layout_width="0dp"
+            android:layout_width="70dp"
             android:layout_height="match_parent"
-            android:layout_weight=".2"
+            android:layout_alignParentRight="true"
+            android:background="@{context.getColor(container.state.imageResource)}"
             android:gravity="center"
+            android:text="@{container.state.name}"
             android:textColor="@android:color/white"
             android:textStyle="bold"
-            android:background="@{context.getColor(container.state.imageResource)}"
-            android:text="@{container.state.name}"/>
+            tools:background="@color/dark_grey"
+            tools:text="Running" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/container_name"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_toLeftOf="@id/container_status"
+            android:layout_alignParentLeft="true"
+            android:text="@{container.names[0]}"
+            tools:text="/tomcat7"
+            android:textStyle="bold"
+            android:textSize="15dp"/>
+
+        <TextView
+            android:id="@+id/container_image"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_below="@id/container_name"
+            android:layout_toLeftOf="@id/container_status"
+            android:layout_alignParentLeft="true"
+            tools:text="tomcat"
+            android:text="@{container.image}"
+            android:textSize="15dp"
+            />
+
+
+    </RelativeLayout>
 </layout>

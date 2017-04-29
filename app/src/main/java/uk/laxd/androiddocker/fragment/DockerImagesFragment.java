@@ -1,27 +1,21 @@
 package uk.laxd.androiddocker.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnItemClick;
 import butterknife.Unbinder;
 import rx.Subscriber;
 import rx.Subscription;
@@ -31,17 +25,14 @@ import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.DockerService;
 import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.R;
-import uk.laxd.androiddocker.activity.DockerImageActivity;
 import uk.laxd.androiddocker.adapter.DockerImagesListAdapter;
-import uk.laxd.androiddocker.dto.DockerContainer;
 import uk.laxd.androiddocker.dto.DockerImage;
-import uk.laxd.androiddocker.rx.AdapterSubscriber;
 
 /**
  * Created by lawrence on 04/01/17.
  */
 
-public class DockerImagesFragment extends DockerDtoListFragment {
+public class DockerImagesFragment extends Fragment {
 
     private Unbinder unbinder;
 
@@ -51,12 +42,10 @@ public class DockerImagesFragment extends DockerDtoListFragment {
     private DockerService dockerService;
 
     @BindView(R.id.image_list)
-    protected ListView listView;
+    protected RecyclerView listView;
 
     @BindView(R.id.refresh_layout)
     protected SwipeRefreshLayout swipeRefreshLayout;
-
-    private ArrayAdapter<DockerImage> dockerImageAdapter;
 
     private Subscription sub;
 
@@ -78,6 +67,8 @@ public class DockerImagesFragment extends DockerDtoListFragment {
 
         unbinder = ButterKnife.bind(this, view);
 
+        listView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         return view;
     }
 
@@ -95,9 +86,6 @@ public class DockerImagesFragment extends DockerDtoListFragment {
     public void onStart() {
         super.onStart();
 
-        dockerImageAdapter = new DockerImagesListAdapter(getActivity(), R.layout.docker_image_list_row, new ArrayList<DockerImage>());
-        listView.setAdapter(dockerImageAdapter);
-
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -113,16 +101,26 @@ public class DockerImagesFragment extends DockerDtoListFragment {
                 .getImages(true, false)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new AdapterSubscriber<>(getContext(), dockerImageAdapter, swipeRefreshLayout));
-    }
+                .subscribe(new Subscriber<List<DockerImage>>() {
+                    @Override
+                    public void onCompleted() {
 
-    @Override
-    public Class<? extends Activity> getActivityClass() {
-        return DockerImageActivity.class;
-    }
+                    }
 
-    @Override
-    public ListView getListView() {
-        return listView;
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<DockerImage> dockerImages) {
+                        DockerImagesListAdapter adapter = new DockerImagesListAdapter(dockerImages);
+
+                        listView.setAdapter(adapter);
+                        listView.smoothScrollToPosition(0);
+
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
     }
 }
