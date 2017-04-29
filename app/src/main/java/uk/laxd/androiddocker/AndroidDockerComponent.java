@@ -9,6 +9,7 @@ import uk.laxd.androiddocker.fragment.DockerContainersFragment;
 import uk.laxd.androiddocker.fragment.DockerImageFragment;
 import uk.laxd.androiddocker.fragment.DockerImagesFragment;
 import uk.laxd.androiddocker.activity.MainActivity;
+import uk.laxd.androiddocker.fragment.DockerLogFragment;
 import uk.laxd.androiddocker.fragment.SetupFragment;
 import uk.laxd.androiddocker.module.RetrofitModule;
 
@@ -26,5 +27,6 @@ public interface AndroidDockerComponent {
     void inject(DockerContainerFragment dockerContainerFragment);
     void inject(SetupFragment setupFragment);
     void inject(DockerImageFragment dockerImageFragment);
+    void inject(DockerLogFragment dockerLogFragment);
     void inject(AndroidDockerApplication androidDockerApplication);
 }

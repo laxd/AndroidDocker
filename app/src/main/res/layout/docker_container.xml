@@ -109,5 +109,11 @@
             android:layout_height="wrap_content"
             app:items="@{container.networkSettings.ports}"
             app:itemBinding="@{container.networkSettings.portsItemBinding}"/>
+
+        <Button
+            android:id="@+id/container_view_logs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Logs"/>
     </LinearLayout>
 </layout>

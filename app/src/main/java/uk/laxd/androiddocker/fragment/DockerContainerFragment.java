@@ -29,6 +29,7 @@ import uk.laxd.androiddocker.AndroidDockerApplication;
 import uk.laxd.androiddocker.DockerServiceFactory;
 import uk.laxd.androiddocker.R;
 import uk.laxd.androiddocker.activity.DockerImageActivity;
+import uk.laxd.androiddocker.activity.DockerLogActivity;
 import uk.laxd.androiddocker.databinding.DockerContainerBinding;
 import uk.laxd.androiddocker.dto.DockerContainerDetail;
 import uk.laxd.androiddocker.dto.DockerImageDetail;
@@ -66,6 +67,13 @@ public class DockerContainerFragment extends Fragment {
 
 
         return root;
+    }
+
+    @OnClick(R.id.container_view_logs)
+    public void onLogsClick() {
+        Intent intent = new Intent(getActivity(), DockerLogActivity.class);
+        intent.putExtra("id", getArguments().getString("id"));
+        startActivity(intent);
     }
 
     @OnClick(R.id.container_image)

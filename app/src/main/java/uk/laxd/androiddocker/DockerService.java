@@ -2,15 +2,16 @@ package uk.laxd.androiddocker;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Streaming;
 import rx.Observable;
 import uk.laxd.androiddocker.dto.DockerContainer;
 import uk.laxd.androiddocker.dto.DockerContainerDetail;
 import uk.laxd.androiddocker.dto.DockerImage;
 import uk.laxd.androiddocker.dto.DockerImageDetail;
-import uk.laxd.androiddocker.dto.DockerVersion;
 
 /**
  * Created by lawrence on 04/01/17.
@@ -35,4 +36,9 @@ public interface DockerService {
 
     @GET("/containers/{id}/json")
     Observable<DockerContainerDetail> getContainer(@Path("id") String id);
+
+//    @Headers(value = "Accept: plain/text")
+    @GET("/containers/{id}/logs?tail=10")
+    @Streaming
+    Observable<ResponseBody> getLogs(@Path("id") String id, @Query("stdout") boolean stdout, @Query("stderr") boolean stderr, @Query("since") Integer since);
 }
